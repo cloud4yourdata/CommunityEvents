@@ -1,0 +1,41 @@
+﻿USE [master];
+REFERENCE ASSEMBLY ImageCommon;
+REFERENCE ASSEMBLY ImageTagging;
+SET @@FeaturePreviews = "FileSetV2Dot5:on, AsyncCompilerStoreAccess:on,EnableParquetUdos:on";
+//DECLARE @basePath string = "Demos/ADF/Images/20181111";
+DECLARE @input string = @basePath + "/{FileName}";
+DECLARE @output string = @basePath + @"/output/objects.csv";
+
+///Extract images
+@imgs =
+    EXTRACT FileName string,
+            ImgData byte[]
+    FROM @input
+    USING new Cognition.Vision.ImageExtractor();
+
+//// Extract the number of objects on each image and tag them 
+@objects =
+    PROCESS @imgs 
+    PRODUCE FileName,
+            NumObjects int,
+            Tags SQL.MAP<string, float?>
+    READONLY FileName
+    USING new Cognition.Vision.ImageTagger();
+
+//// Transform to table:
+///  FileName tag1
+///  FileName tag2
+///  FileName tag3
+
+@objects =
+    SELECT o.FileName,
+           t.Tag,
+           t.Conf
+    FROM @objects AS o
+         CROSS APPLY
+             EXPLODE(o.Tags) AS t(Tag,Conf);
+
+OUTPUT @objects
+TO @output
+ORDER BY FileName
+USING Outputters.Csv(outputHeader:true);
