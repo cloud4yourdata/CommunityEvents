@@ -1,0 +1,54 @@
+##################
+DEMO1
+##################
+1.Uruchomić skrypt (na Azure 1 ADLA) Demo001_VertexInfo.usql
+(opcjonalnie pokazać jak dodać nowy projekt)
+2. Pokazać VertexInfo.cs
+3. Pokazać skrypt RegisterExtensions.usql
+4. Pakazać BinaryContentExtractor.cs
+5. Pokazać wyniki Demo001_VertexInfo.usql
+	adluinfo.cvs
+	adlu_apps.cvs
+	adlu_workingDir.cvs
+	
+##################
+DEMO2
+##################
+ 1.Uruchomić skrypt Demo005_CogitiveFaces.usql
+ 2.Pokazać dane d:\AppData\BIGDATA\Images\ 
+ 3.Pokazać RegisterCognitiveAssemblies.usql 
+ 4.Omówić skrypt i wyniki (warunek na plec i wiek oraz emocje)
+ 
+##################
+DEMO3
+##################
+1.Uruchomić skrypt Demo003_Reducer.usql
+2. Pokazać plik BreakRangeReducer.cs Get<>,Set<>
+3. Omówić skrypt Demo003_Reducer.usql
+
+##################
+DEMO4
+##################
+Pokazać jak dodawać UDO do plików
+(opcjonalnie rejestracja rozszerzeń)
+
+1. Uruchomić skrypt Demo000_ProcessDevDataMendianR.usql (Azure ADLA=1)
+2. Pokazać R Studio SQLDay.R -Plot (zoom) 
+Powiedzieć co jest zrobienia Filtr medianowy na danych 
+3.Omówić skrypt Demo000_ProcessDevDataMendianR.usql 
+4. Pokazać wyniki (opcja)
+
+To samo na na Revoscale (zapis do xdf)
+
+5.(Opjonlanie) uruchomić filtr medianowy w pythonie 
+  Demo000_ProcessDevDataMendianPy.usql (Azure ADLU1)
+  Wynik Python_DevProcResults.csv
+  
+6.Uruchomić HousePrices w pythonie 
+  Demo001_HousePrices.usql (Azure ADLU1)
+  Powiedzieć o Kaggle i pokazać sktypt odpowiedzielny
+  za stworzenie modelu HousePricesTrain.py (PythonDemos)
+  Wynik Python_HousePrices.csv
+  
+7.Opcjonalnie pokzać Python Reducer (IL Spy)
+  

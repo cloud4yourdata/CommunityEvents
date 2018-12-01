@@ -1,0 +1,49 @@
+﻿USE DATABASE SQLDay2018;
+REFERENCE ASSEMBLY ADLAExt;
+USING XmlXPathProcessor = ADLAExt.Processors.XmlXPathProcessor;
+
+DECLARE @inputFile string = @"D:\AppData\BIGDATA\StackOverFlow\programmers\Posts.xml";
+DECLARE @outputFile string = @"d:\Repos\Cloud4YourData\SQLDay2018\Misc\post.csv";
+
+@ds =
+    EXTRACT content string
+    FROM @inputFile
+    USING Extractors.Text(delimiter:'\r',silent:true);
+
+@ds =
+    PROCESS @ds
+    PRODUCE content ,
+            Tags string,
+            Id string,
+            ViewCount string,
+            CreationDate string,
+            Title string,
+            AnswerCount string,
+            OwnerUserId string
+            READONLY content
+    USING new XmlXPathProcessor( xPathQuery : "/row", columnPaths : new SQL.MAP<string, string>
+              {
+              {"Id", "Id"},
+              {"CreationDate", "CreationDate"},
+              {"ViewCount", "ViewCount"},
+              {"Tags", "Tags"},
+              {"Title", "Title"},
+              {"AnswerCount", "AnswerCount"},
+              {"OwnerUserId", "OwnerUserId"},
+              }
+              );
+
+@ds =
+    SELECT 
+           Id,
+           ViewCount,
+           CreationDate,
+           Title,
+           AnswerCount,
+           OwnerUserId
+    FROM @ds
+    WHERE Id != string.Empty;
+
+OUTPUT @ds
+TO @outputFile
+USING Outputters.Tsv(outputHeader : true);

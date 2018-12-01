@@ -1,0 +1,46 @@
+﻿REFERENCE ASSEMBLY [master].[ExtPython];
+REFERENCE ASSEMBLY [SQLDay2018].ADLAExt;
+USING adlinfo = ADLAExt.Utils.VertextInfo;
+
+DEPLOY RESOURCE @"/SQLDay2018/PythonIrisUseSVMModelUSQL.py";
+DEPLOY RESOURCE @"/SQLDay2018/iris_model_svm.bin";
+DECLARE @input string = @"/SQLDay2018/DataSets/ManyFiles/{FileName}.csv";
+DECLARE @output string = @"/SQLDay2018/Results/Python_Iris_sklearn_SVM.csv";
+
+
+@Input =
+    EXTRACT SepalLength float,
+            SepalWidth float,
+            PetalLength float,
+            PetalWidth float,
+            Name string,
+            FileName string
+    FROM @input
+    USING Extractors.Csv();
+
+@Out =
+    REDUCE @Input ON FileName 
+    PRODUCE SepalLength double,
+            SepalWidth double,
+            PetalLength double,
+            PetalWidth double,
+            Predicted string
+    USING new Extension.Python.Reducer("PythonIrisUseSVMModelUSQL.py");
+
+OUTPUT @Out
+TO @output 
+USING Outputters.Csv();
+
+@workingDir =
+    SELECT 
+           adlinfo.ListCurrentDir() AS Content
+    FROM(
+        VALUES
+        (
+            "Info"
+        ))
+AS T(Info);
+
+OUTPUT @workingDir
+TO "/SQLDay2018/Results/adlu_workingDir_Python.cvs"
+USING Outputters.Csv();

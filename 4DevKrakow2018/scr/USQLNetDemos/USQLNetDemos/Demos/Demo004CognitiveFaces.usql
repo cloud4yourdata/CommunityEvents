@@ -1,0 +1,74 @@
+﻿USE [4Developers];
+REFERENCE ASSEMBLY ImageCommon;
+REFERENCE ASSEMBLY FaceSdk;
+REFERENCE ASSEMBLY ImageEmotion;
+
+
+DECLARE @input string = @"D:\AppData\BIGDATA\Images\{FileName}";
+DECLARE @outputFileKids string = @"d:\Repos\Cloud4YourData\Demos\4DevKrakow2018\output\kids.csv";
+DECLARE @outputFileRawFaces string = @"d:\Repos\Cloud4YourData\Demos\4DevKrakow2018\output\rawFaces.csv";
+DECLARE @outputFileEmotionsFaces string = @"d:\Repos\Cloud4YourData\Demos\4DevKrakow2018\output\emotionsFaces.csv";
+DECLARE @outputFileHappy  string = @"d:\Repos\Cloud4YourData\Demos\4DevKrakow2018\output\happyFaces.csv";
+
+///Extract faces via Extractor
+@rawFaces =
+    EXTRACT FileName string, 
+        NumFaces int, 
+        FaceIndex int, 
+        RectX float, RectY float, Width float, Height float, 
+        FaceAge int, 
+        FaceGender string
+    FROM @input 
+    USING new Cognition.Vision.FaceDetectionExtractor();
+
+///Extract images
+@imgs =
+    EXTRACT FileName string,
+            ImgData byte[]
+    FROM @input
+    USING new Cognition.Vision.ImageExtractor();
+
+// Recognize facial expressions using applier
+@emotions =
+    SELECT FileName,
+        Details.NumFaces,
+        Details.FaceIndex,
+        Details.RectX, Details.RectY, Details.Width, Details.Height,
+        Details.Emotion,
+        Details.Confidence
+    FROM @imgs
+    CROSS APPLY
+        new Cognition.Vision.EmotionApplier() AS Details(
+            NumFaces int, 
+            FaceIndex int, 
+            RectX float, RectY float, Width float, Height float, 
+            Emotion string, 
+            Confidence float);
+
+//
+@kids =
+    SELECT DISTINCT FileName
+    FROM @rawFaces
+    WHERE FaceAge < 7 AND FaceGender == "Female";
+
+@happy =
+    SELECT DISTINCT FileName
+    FROM @emotions
+    WHERE Emotion == "Happiness";
+
+OUTPUT @kids
+TO @outputFileKids
+USING Outputters.Csv();
+
+OUTPUT @rawFaces
+TO @outputFileRawFaces
+USING Outputters.Csv();
+
+
+OUTPUT @emotions
+TO @outputFileEmotionsFaces
+USING Outputters.Csv();
+
+OUTPUT @happy 
+TO @outputFileHappy 
+USING Outputters.Csv();

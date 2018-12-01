@@ -1,0 +1,65 @@
+"BootDevice:\Device\HarddiskVolume2
+BuildNumber:9600
+BuildType:Multiprocessor Free
+Caption:Microsoft Windows Server 2012 R2 Datacenter
+CodeSet:1252
+CountryCode:1
+CreationClassName:Win32_OperatingSystem
+CSCreationClassName:Win32_ComputerSystem
+CSDVersion:
+CSName:MICROSO-VKCFNH9
+CurrentTimeZone:-420
+DataExecutionPrevention_32BitApplications:True
+DataExecutionPrevention_Available:True
+DataExecutionPrevention_Drivers:True
+DataExecutionPrevention_SupportPolicy:3
+Debug:False
+Description:
+Distributed:False
+EncryptionLevel:256
+ForegroundApplicationBoost:2
+FreePhysicalMemory:1549536
+FreeSpaceInPagingFiles:6217728
+FreeVirtualMemory:7577820
+InstallDate:20181014125222.000000-420
+LargeSystemCache:
+LastBootUpTime:20181015060749.770741-420
+LocalDateTime:20181015060807.722000-420
+Locale:0409
+Manufacturer:Microsoft Corporation
+MaxNumberOfProcesses:4294967295
+MaxProcessMemorySize:137438953344
+MUILanguages:System.String[]
+Name:Microsoft Windows Server 2012 R2 Datacenter|C:\Windows|\Device\Harddisk0\Partition1
+NumberOfLicensedUsers:
+NumberOfProcesses:30
+NumberOfUsers:
+OperatingSystemSKU:8
+Organization:Microsoft
+OSArchitecture:64-bit
+OSLanguage:1033
+OSProductSuite:400
+OSType:18
+OtherTypeDescription:
+PAEEnabled:
+PlusProductID:
+PlusVersionNumber:
+PortableOperatingSystem:False
+Primary:True
+ProductType:3
+RegisteredUser:Microsoft
+SerialNumber:00254-20000-00000-AA915
+ServicePackMajorVersion:0
+ServicePackMinorVersion:0
+SizeStoredInPagingFiles:6217728
+Status:OK
+SuiteMask:400
+SystemDevice:\Device\HarddiskVolume1
+SystemDirectory:C:\Windows\system32
+SystemDrive:C:
+TotalSwapSpaceSize:
+TotalVirtualMemorySize:8314420
+TotalVisibleMemorySize:2096692
+Version:6.3.9600
+WindowsDirectory:C:\Windows
+","Processor:Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz;NumberOfCores:18;RAM Size in GB: 2"

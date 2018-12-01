@@ -1,0 +1,148 @@
+{
+  "name": "MeasurementsBatchProcessor",
+  "properties": {
+    "description": "Create measurements stats",
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "BlobSource",
+            "recursive": true
+          },
+          "sink": {
+            "type": "AzureDataLakeStoreSink",
+            "copyBehavior": "PreserveHierarchy",
+            "writeBatchSize": 0,
+            "writeBatchTimeout": "00:00:00"
+          }
+        },
+        "inputs": [
+          {
+            "name": "InputDevices"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "OutputDevices"
+          }
+        ],
+        "policy": {
+          "timeout": "1.00:00:00",
+          "concurrency": 1,
+          "executionPriorityOrder": "NewestFirst",
+          "style": "StartOfInterval",
+          "retry": 3,
+          "longRetry": 0,
+          "longRetryInterval": "00:00:00"
+        },
+        "scheduler": {
+          "frequency": "Day",
+          "interval": 1
+        },
+        "name": "Copy Devices Settings To ADLS"
+      },
+      {
+        "type": "DataLakeAnalyticsU-SQL",
+        "typeProperties": {
+          "script": "DemoPoC.dbo.usp_ComputeDailyStats(System.DateTime.Parse(@DateSliceStart), System.DateTime.Parse(@DateSliceEnd));",
+          "degreeOfParallelism": 5,
+          "parameters": {
+            "DateSliceStart": "$$Text.Format('{0:yyyy-MM-ddTHH:mm:ssZ}', SliceStart)",
+            "DateSliceEnd": "$$Text.Format('{0:yyyy-MM-ddTHH:mm:ssZ}', SliceEnd)"
+          }
+        },
+        "inputs": [
+          {
+            "name": "OutputDevices"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "DailyStats"
+          }
+        ],
+        "scheduler": {
+          "frequency": "Day",
+          "interval": 1
+        },
+        "name": "Compute Daily Stats",
+        "linkedServiceName": "ADLA-USQL"
+      },
+      {
+        "type": "DataLakeAnalyticsU-SQL",
+        "typeProperties": {
+          "script": "DemoPoC.dbo.usp_ComputeSummaryReport(System.DateTime.Parse(@DateSliceStart), System.DateTime.Parse(@DateSliceEnd));",
+          "degreeOfParallelism": 5,
+          "parameters": {
+            "DateSliceStart": "$$Text.Format('{0:yyyy-MM-ddTHH:mm:ssZ}', SliceStart)",
+            "DateSliceEnd": "$$Text.Format('{0:yyyy-MM-ddTHH:mm:ssZ}', SliceEnd)"
+          }
+        },
+        "inputs": [
+          {
+            "name": "DailyStats"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "SummaryReport"
+          }
+        ],
+        "scheduler": {
+          "frequency": "Day",
+          "interval": 1
+        },
+        "name": "Compute Summary Report",
+        "linkedServiceName": "ADLA-USQL"
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "AzureDataLakeStoreSource",
+            "recursive": false
+          },
+          "sink": {
+            "type": "SqlSink",
+            "writeBatchSize": 0,
+            "writeBatchTimeout": "00:00:00"
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "columnMappings": "objectId:ObjectId,MeasDate:MeasDate,minWaterLevel:MinWaterLevel,maxWaterLevel:MaxWaterLevel,avgWaterLevel:AvgWaterLevel,minTemperature:MinTemperature,maxTemperature:MaxTemperature,avgTemperature:AvgTemperature,minHumidity:MinHumidity,maxHumidity:MaxHumidity,avgHumidity:AvgHumidity"
+          }
+        },
+        "inputs": [
+          {
+            "name": "DailyStats"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "OnPremSQLDailyStats"
+          }
+        ],
+        "policy": {
+          "timeout": "1.00:00:00",
+          "concurrency": 1,
+          "executionPriorityOrder": "NewestFirst",
+          "style": "StartOfInterval",
+          "retry": 3,
+          "longRetry": 0,
+          "longRetryInterval": "00:00:00"
+        },
+        "scheduler": {
+          "frequency": "Day",
+          "interval": 1
+        },
+        "name": "Copy-Daily-Stats-To-OnPrem-SQL"
+      }
+    ],
+    "start": "2018-01-22T23:00:00Z",
+    "end": "2018-01-26T23:00:00Z",
+    "isPaused": false,
+    "pipelineMode": "Scheduled"
+  },
+  "$schema": "http://datafactories.schema.management.azure.com/schemas/2015-09-01/Microsoft.DataFactory.Pipeline.json"
+}

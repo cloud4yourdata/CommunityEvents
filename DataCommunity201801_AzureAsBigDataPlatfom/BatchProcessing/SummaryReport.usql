@@ -1,0 +1,81 @@
+﻿USE DATABASE DemoPoC;
+REFERENCE ASSEMBLY [Newtonsoft.Json];
+REFERENCE ASSEMBLY [Microsoft.Analytics.Samples.Formats];
+DECLARE @inputDevices string = @"/mySamples/DevicesEvents/Devices.json";
+DECLARE @dailyData string = @"/mySamples/DevicesEvents/Results/{date}.csv";
+
+@json =
+    EXTRACT jsonString string
+    FROM @inputDevices
+    USING Extractors.Text(delimiter : '\b', quoting : false);
+
+@jsonify =
+    SELECT Microsoft.Analytics.Samples.Formats.Json.JsonFunctions.JsonTuple(jsonString) AS dev
+    FROM @json;
+
+@devices =
+    SELECT int.Parse(dev["id"]) AS objectId,
+          dev["lat"] AS lat,
+          dev["lon"] AS lon,
+          dev["min"] AS min,
+          dev["max"] AS max
+    FROM @jsonify;
+
+@dailyRS =
+    EXTRACT objectId int,
+            measDate DateTime,
+            minWaterLevel int,
+            maxWaterLevel int,
+            avgWaterLevel int,
+            minTemperature int,
+            maxTemperature int,
+            avgTemperature int,
+            minHumidity int,
+            maxHumidity int,
+            avgHumidity int,
+            date string
+    FROM @dailyData
+    USING Extractors.Csv(skipFirstNRows : 1);
+
+@dailyRSAgg =
+    SELECT MIN(avgTemperature) AS minTemperature,
+           MAX(avgTemperature) AS maxTemperature,
+           AVG(avgTemperature) AS avgTemperature,
+           MIN(avgWaterLevel) AS minWaterLevel,
+           MAX(avgWaterLevel) AS maxWaterLevel,
+           AVG(avgWaterLevel) AS avgWaterLevel,
+           MIN(avgHumidity) AS minHumidity,
+           MAX(avgHumidity) AS maxHumidity,
+           AVG(avgHumidity) AS avgHumidity,
+           objectId
+    FROM @dailyRS
+    GROUP BY objectId;
+@rs =
+    SELECT dev.objectId,
+           dev.lat,
+           dev.lon,
+           drs.avgWaterLevel AS avgdailyWaterLevel,
+           drs.avgHumidity AS avgdailyHumidity,
+           drs.avgTemperature AS avgdailyTemperature,
+           agg.minTemperature,
+           agg.maxTemperature,
+           agg.avgTemperature,
+           agg.minWaterLevel,
+           agg.maxWaterLevel,
+           agg.avgWaterLevel,
+           agg.minHumidity,
+           agg.maxHumidity,
+           agg.avgHumidity,
+           drs.date
+    FROM @dailyRS AS drs
+         INNER JOIN
+             @devices AS dev
+         ON dev.objectId == drs.objectId
+         INNER JOIN
+             @dailyRSAgg AS agg
+         ON agg.objectId == drs.objectId;
+                          
+
+OUTPUT @rs
+TO "/mySamples/DevicesEvents/SummaryReport.csv"
+USING Outputters.Csv(outputHeader : true);

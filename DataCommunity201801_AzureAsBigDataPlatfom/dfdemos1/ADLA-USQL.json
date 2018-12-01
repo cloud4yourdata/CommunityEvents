@@ -1,0 +1,16 @@
+{
+  "name": "ADLA-USQL",
+  "properties": {
+    "type": "AzureDataLakeAnalytics",
+    "typeProperties": {
+      "accountName": "adlademos",
+      "dataLakeAnalyticsUri": "azuredatalakeanalytics.net",
+      "servicePrincipalId": "282f62a7-f1f8-4ce5-bf4c-2e02d79622ab",
+      "servicePrincipalKey": "**********",
+      "tenant": "925460c6-df85-4de8-ab11-38b0891a7dff",
+      "subscriptionId": "fb0d606c-7066-43ce-8b87-9112fe309305",
+      "resourceGroupName": "demos"
+    }
+  },
+  "$schema": "http://datafactories.schema.management.azure.com/schemas/2015-09-01/Microsoft.DataFactory.LinkedService.json"
+}

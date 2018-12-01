@@ -1,0 +1,57 @@
+﻿USE DATABASE [4Developers];
+REFERENCE ASSEMBLY ADLAExt;
+USING adlinfo = ADLAExt.Utils.VertextInfo;
+@ds =
+    SELECT adlinfo.GetInfo() AS BasicInfo,
+           adlinfo.GetFullInfo() AS FullInfo,  
+           adlinfo.GetVMInfo()  AS VMInfo,
+           adlinfo.GetDrivesInfo() AS Drives,
+           adlinfo.GetInstalledApps() AS Apps,
+           adlinfo.ListCurrentDir() AS Content,
+           adlinfo.ListDrivesFiles("D:\\data") AS DDrive
+    FROM(
+        VALUES
+        (
+            "Info"
+        ))
+AS T(Info);
+
+@adluinfo =
+    SELECT FullInfo,BasicInfo
+    FROM @ds;
+
+OUTPUT @adluinfo
+TO "/4Developers/Results/adluinfo.cvs"
+USING Outputters.Csv();
+
+@drivesinfo =
+    SELECT Drives
+    FROM @ds;
+
+OUTPUT @drivesinfo
+TO "/4Developers/Results/adlu_drivesinfo.cvs"
+USING Outputters.Csv();
+
+@apps =
+    SELECT Apps
+    FROM @ds;
+
+OUTPUT @apps
+TO "/4Developers/Results/adlu_apps.cvs"
+USING Outputters.Csv();
+
+@workingDir =
+    SELECT Content
+    FROM @ds;
+
+OUTPUT @workingDir
+TO "/4Developers/Results/adlu_workingDir.cvs"
+USING Outputters.Csv();
+
+@ddrive =
+    SELECT DDrive
+    FROM @ds;
+
+OUTPUT @ddrive
+TO "/4Developers/Results/adlu_dDrive.cvs"
+USING Outputters.Csv();

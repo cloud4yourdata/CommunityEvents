@@ -1,0 +1,13 @@
+{
+  "name": "WorkSQLServerPc2772",
+  "properties": {
+    "type": "OnPremisesSqlServer",
+    "typeProperties": {
+      "connectionString": "Data Source=.;Initial Catalog='VK';encryptedCredential=eyJDbGFzc1R5cGUiOiJNaWNyb3NvZnQuRGF0YVByb3h5LkNvcmUuSW50ZXJTZXJ2aWNlRGF0YUNvbnRyYWN0LkNyZWRlbnRpYWxTVTA2Q1kxNCIsIkNyZWRlbnRpYWxJZCI6Ijc1MTI2ZDZhLTk0NTgtNDEyZS1iNjM5LWZkNmFjYzhmNDk1MCIsIkRhdGFTb3VyY2VSZWZlcmVuY2VBbmRTaWduYXR1cmUiOm51bGwsIkRhdGFTb3VyY2VTZXR0aW5ncyI6bnVsbCwiRW5jcnlwdGVkQmxvYiI6bnVsbCwiVmVyc2lvbiI6IjEuMCJ9;",
+      "gatewayName": "IntegrationRuntime-PC2772",
+      "userName": "",
+      "password": "**********"
+    }
+  },
+  "$schema": "http://datafactories.schema.management.azure.com/schemas/2015-09-01/Microsoft.DataFactory.LinkedService.json"
+}

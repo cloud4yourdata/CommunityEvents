@@ -1,0 +1,38 @@
+﻿--POWER BI
+SELECT
+	m.humidity AS Humidity,
+	m.temperature AS Temperature,	
+    m.waterLevel AS waterLevel,
+	d.min AS minwaterLevel,
+	d.max AS maxwaterLevel,
+	m.TIMESTAMP AS time
+	INTO [DevStreamData]
+FROM
+    [Input] AS m
+    TIMESTAMP BY m.TIMESTAMP
+    JOIN [Devices] AS d ON d.ID = m.ID
+	WHERE m.ID = 5;
+
+--RAW DATA -> ADLS
+SELECT * 
+INTO [RawData]
+FROM [Input] AS m
+    TIMESTAMP BY m.TIMESTAMP;
+
+--MAX LEVEL ALERTS
+WITH  AvgWaterLevel AS
+(
+SELECT  m.ID,
+AVG(waterLevel) AS WaterLevel
+FROM [Input] AS m
+ TIMESTAMP BY m.TIMESTAMP
+GROUP BY
+  TUMBLINGWINDOW(second,5),
+         m.ID
+)
+SELECT d.Id,awg.WaterLevel,d.maxwaterLevel FROM AvgWaterLevel AS awg
+JOIN [Devices] AS d ON d.ID = awg.ID
+INTO [WaterAlertsMax]
+WHERE awg.WaterLevel >  d.maxwaterLevel;
+
+    

@@ -1,0 +1,19 @@
+1.Hot Path
+- Simulator
+-Refrence Data
+-Stream Anlytics Flow
+-Stream Anlytics Input+Outputs
+-Stream Anlytics Query
+-Power BI
+-ADLS Store
+-Warn Function
+
+Cold Path
+
+-Azure Data Factory Flow
+-Local DW (clear)
+-ADLA -query
+-Databricks Notebook
+-Run
+-ADF Gateway
+-Local DW (clear)

@@ -1,0 +1,7 @@
+﻿DECLARE @AssemblyPath string = @"d:\Repos\Cloud4YourData\SQLDay2018\ADLAExt\bin\Debug\";
+//DECLARE @AssemblyPath string = @"SQLDay2018/Assemblies/";
+
+DECLARE @AssemblyExt string = @AssemblyPath+"ADLAExt.dll";
+USE SQLDay2018;
+DROP ASSEMBLY IF EXISTS ADLAExt;
+CREATE ASSEMBLY ADLAExt FROM @AssemblyExt;

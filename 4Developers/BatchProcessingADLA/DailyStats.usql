@@ -1,0 +1,129 @@
+﻿//Local
+//DECLARE @inputRefbasePath string = @"d:\Repos\Cloud4YourData\Demos\4Developers\Data\Ref\";
+//DECLARE @inputbasePath string = @"d:\Repos\Cloud4YourData\Demos\4Developers\Data\";
+//DECLARE @outputbasePath string = @"d:\Repos\Cloud4YourData\Demos\4Developers\Data\Results\";
+
+//Azure
+DECLARE @inputRefbasePath string = @"/mySamples/Sweets/Ref/";
+DECLARE @inputbasePath string = @"/mySamples/Sweets/csv/";
+DECLARE @outputbasePath string = @"/mySamples/Sweets/Results/";
+
+DECLARE @prevDate string = DateTime.UtcNow.Date.AddDays( - 1).ToString("yyyy-MM-dd");
+DECLARE @inputFiles string = @inputbasePath + @prevDate + "\\{FileName}.csv";
+DECLARE @ouputFile string = @outputbasePath + @prevDate +"_Sales.csv";
+DECLARE @outputTempFile string = @outputbasePath+@prevDate+"_Temp.csv";
+DECLARE @inputProducts string = @inputRefbasePath + @"SweetsProducts.json";
+DECLARE @inputDevices string = @inputRefbasePath + @"SweetsDevices.json";
+
+
+USE DATABASE Demo4Developers;
+REFERENCE ASSEMBLY [Newtonsoft.Json];
+REFERENCE ASSEMBLY [Microsoft.Analytics.Samples.Formats];
+
+//Products
+@json =
+    EXTRACT jsonString string
+    FROM @inputProducts
+    USING Extractors.Text(delimiter : '\b', quoting : false);
+
+@jsonProd =
+    SELECT Microsoft.Analytics.Samples.Formats.Json.JsonFunctions.JsonTuple(jsonString) AS product
+    FROM @json;
+
+@products =
+    SELECT int.Parse(product["ProductId"]) AS prodId,
+           product["Name"]AS prodName,
+           double.Parse(product["Price"], new NumberFormatInfo { NumberDecimalSeparator ="." }) AS prodPrice
+    FROM @jsonProd;
+
+//Devices
+@jsonDevices =
+    EXTRACT jsonString string
+    FROM @inputDevices
+    USING Extractors.Text(delimiter : '\b', quoting : false);
+
+@jsonDev =
+    SELECT Microsoft.Analytics.Samples.Formats.Json.JsonFunctions.JsonTuple(jsonString) AS device    FROM @jsonDevices;
+
+@devices =
+    SELECT device["id"] AS deviceId,
+          device["lat"] AS deviceLat,
+          device["lon"] AS deviceLon,
+          device["min"] AS deviceMin,
+          device["max"] AS deviceMax
+    FROM @jsonDev;
+
+@ds =
+    EXTRACT SerialNumber string,
+            EventType int,
+            EventValue1 int,
+            EventValue2 double,
+            EventValue3 double,
+            EventTime DateTime,
+            EventProcessedUtcTime DateTime,
+            PartitionId int,
+            EventEnqueuedUtcTime DateTime,
+            FileName string
+    FROM @inputFiles
+    USING Extractors.Text(delimiter : ',', skipFirstNRows : 1);
+
+@sale =
+    SELECT EventTime.Date AS Date,
+           SerialNumber,
+           EventValue1 AS ProductId,
+           COUNT( * ) AS Total
+    FROM @ds
+    WHERE EventType == 1
+    GROUP BY EventTime.Date,
+             SerialNumber,
+             EventValue1;
+
+@devTemp =
+    SELECT EventTime.Date AS Date,
+           SerialNumber,
+           AVG(Convert.ToDouble(EventValue1)) AS AvgTemp
+    FROM @ds
+    WHERE EventType == 0
+    GROUP BY EventTime.Date,
+             SerialNumber;
+
+@saleInfo =
+    SELECT s.Date,
+           s.SerialNumber,
+           d.deviceLat AS Lat,
+           d.deviceLon AS Lon,
+           p.prodName AS ProductName,
+           s.Total AS Quantity,
+           p.prodPrice AS Price,
+           Math.Round((s.Total * p.prodPrice).Value,2) AS TotalValue
+    FROM @sale AS s
+         INNER JOIN
+             @products AS p
+         ON p.prodId == s.ProductId
+         INNER JOIN
+             @devices AS d
+         ON d.deviceId == s.SerialNumber;
+
+@tempInfo =
+    SELECT t.Date,
+           t.SerialNumber,
+           d.deviceLat AS Lat,
+           d.deviceLon AS Lon,
+           Math.Round(t.AvgTemp.Value,2) AS AvgTemp
+    FROM @devTemp AS t
+         INNER JOIN
+             @devices AS d
+         ON d.deviceId == t.SerialNumber;
+
+OUTPUT @saleInfo
+TO @ouputFile
+ORDER BY Date,
+         SerialNumber,
+         ProductName
+USING Outputters.Csv(outputHeader : true);
+
+OUTPUT @tempInfo
+TO @outputTempFile
+ORDER BY Date,
+         SerialNumber
+USING Outputters.Csv(outputHeader : true);

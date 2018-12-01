@@ -1,0 +1,143 @@
+﻿USE DATABASE [4Developers];
+
+DROP ASSEMBLY IF EXISTS [ImageCommon];
+CREATE ASSEMBLY IF NOT EXISTS [ImageCommon]
+FROM @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\common\ImageIO.dll"
+WITH ADDITIONAL_FILES = 
+     (
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\common\ImageCommon.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\common\FaceSdkManagedWrapper.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\common\libiomp5md.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\common\DetectionJDA.mdl",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\common\version.cog.imgcommon"
+     );
+
+DROP ASSEMBLY IF EXISTS [ImageOcr];
+CREATE ASSEMBLY IF NOT EXISTS [ImageOcr]
+FROM @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\ocr\ImageOCR.dll"
+WITH ADDITIONAL_FILES =
+     (
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\ocr\Microsoft.Ocr.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\ocr\Microsoft.Ocr.xml",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\ocr\MsOcrRes.orp",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\ocr\version.cog.ocr"
+     );
+
+DROP ASSEMBLY IF EXISTS [FaceSdk];
+CREATE ASSEMBLY IF NOT EXISTS [FaceSdk]
+FROM @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\face\FaceSdkCNN.dll"
+WITH ADDITIONAL_FILES =
+     (
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\face\AgeCNN.mdl",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\face\DetectionDNN.mdl",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\face\FacialHairCnn.mdl",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\face\GenderCnn.mdl",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\face\GlassesCnn.mdl",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\face\Pose.mdl",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\face\RecognitionCNN.mdl",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\face\version.cog.face"
+     );
+
+DROP ASSEMBLY IF EXISTS [ImageTagging];
+CREATE ASSEMBLY IF NOT EXISTS [ImageTagging]
+FROM @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\ImageTagging.dll"
+WITH ADDITIONAL_FILES =
+     (
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\caffe.managed.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\category_threshold_coco.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\category_threshold_imagenet.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\classification.bin",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\config_classification.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\detection_GN_person_256.bin",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\detection_label.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\EntityRecognition.Models.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\feature_map.bin",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\hint_default.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\ImageRecognitionLib.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\ImageRecognitionSDK.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\ImageRecognitionWrapper.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\ImgCapLib.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\LBLM.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\libglog.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\ManagedRecognitionSDK.Models.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\Utils.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\VisualRecognition.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\tagging\version.cog.imgtag"
+     );
+
+DROP ASSEMBLY IF EXISTS [ImageEmotion];
+CREATE ASSEMBLY IF NOT EXISTS [ImageEmotion]
+FROM @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\EmotionAnalysis.dll"
+WITH ADDITIONAL_FILES =
+     (
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\emotion_model.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\EmotionRecognitionManagedWrapper.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\Microsoft.ProjectOxford.Emotion.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_avx.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_avx2.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_avx512.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_core.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_def.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_intel_thread.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_mc.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_mc3.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_msg.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_rt.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_sequential.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_tbb_thread.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_vml_avx.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_vml_avx2.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_vml_avx512.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_vml_cmpt.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_vml_def.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_vml_mc.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_vml_mc2.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\mkl_vml_mc3.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\vision\emotion\version.cog.emotion"
+     );
+
+DROP ASSEMBLY IF EXISTS [TextKeyPhrase];
+CREATE ASSEMBLY IF NOT EXISTS [TextKeyPhrase]
+FROM @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\keyphrase\TextKeyPhrases.dll"
+WITH ADDITIONAL_FILES =
+     (
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\keyphrase\KeyPhrasePreprocessor.en-us.mrr",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\keyphrase\Microsoft.NaturalLanguage.ExtractionPreprocessing.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\keyphrase\Microsoft.NaturalLanguage.KeyPhraseExtractor.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\keyphrase\Microsoft.NaturalLanguage.Runtime.Interop.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\keyphrase\Microsoft.NaturalLanguage.Runtime.Managed.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\keyphrase\Microsoft.NaturalLanguage.TextRank.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\keyphrase\version.cog.keyphrase"
+     );
+
+DROP ASSEMBLY IF EXISTS [TextSentiment];
+CREATE ASSEMBLY IF NOT EXISTS [TextSentiment]
+FROM @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\TextSentimentAnalysis.dll"
+WITH ADDITIONAL_FILES =
+     (
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\50mpaths2.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\emoticon.lex",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\function_words.lex",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\ML.Func.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\neg.lex.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\NLP.Base.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\NLP.Func.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\NLP.Twitter.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\NRC-Hashtag_bigrams-pmilexicon.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\NRC-Hashtag_unigrams-pmilexicon.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\pol.fv",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\pol.lex",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\pol.model",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\pos.lex.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\S.Base.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\S.Core.dll",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\sentiment.emd",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\sentiment.lex",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\Sentiment140_bigrams-pmilexicon.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\Sentiment140_unigrams-pmilexicon.txt",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\sub.fv",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\sub.lex",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\sub.model",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\twitter.word.40.cluster",
+         @"d:\Help\AzureDataLake\Cognitive20180505\usqlext\assembly\cognition\text\sentiment\version.cog.sentiment"
+     );

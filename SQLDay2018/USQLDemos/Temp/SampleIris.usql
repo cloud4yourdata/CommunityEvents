@@ -1,0 +1,17 @@
+﻿REFERENCE ASSEMBLY [ExtPython];
+
+DEPLOY RESOURCE @"/usqlext/samples/python/sample.py";
+
+@Input =
+    EXTRACT SepalLength float, SepalWidth float, PetalLength float, PetalWidth float, Name string
+    FROM @"/usqlext/samples/python/iris.csv"
+    USING Extractors.Csv();
+
+@Out =
+    REDUCE @Input ALL
+    PRODUCE SepalLength double, SepalWidth double, PetalLength double, PetalWidth double, Name string, SepalRatio double, PetalRatio double
+    USING new Extension.Python.Reducer("sample.py");
+
+OUTPUT @Out
+TO @"/SQLDay2018/Results/sample_python.txt"
+USING Outputters.Csv();

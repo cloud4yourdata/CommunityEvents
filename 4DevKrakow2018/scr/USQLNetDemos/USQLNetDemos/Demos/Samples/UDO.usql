@@ -1,0 +1,47 @@
+﻿DECLARE @outputFile string = @"d:\Repos\Cloud4YourData\Demos\4DevKrakow2018\output\UDO.csv";
+
+@sample =
+    SELECT *
+    FROM(
+        VALUES
+        
+        (
+            1,
+            new DateTime(2017, 01, 01, 06, 01, 00),
+            new DateTime(2017, 01, 01, 07, 00, 00),
+            200.00
+        ),
+        (
+            1,
+            new DateTime(2017, 01, 01, 08, 00, 00),
+            new DateTime(2017, 01, 01, 09, 00, 00),
+            900.00
+        ),
+        (
+            2,
+            new DateTime(2017, 01, 01, 06, 01, 00),
+            new DateTime(2017, 01, 01, 07, 00, 00),
+            2.00
+        ),
+        (
+            2,
+            new DateTime(2017, 01, 01, 07, 01, 00),
+            new DateTime(2017, 01, 01, 09, 00, 00),
+            9.00
+        ),
+          (
+            1,
+            new DateTime(2017, 01, 01, 05, 00, 00),
+            new DateTime(2017, 01, 01, 06, 00, 00),
+            100.00
+        )
+      
+        ) AS T (id, begin, end, value);
+
+@results =
+    SELECT USQLNetDemos.Udo.Increment(value) AS value
+    FROM @sample;
+
+OUTPUT @results
+TO @outputFile
+USING Outputters.Csv(outputHeader : true);

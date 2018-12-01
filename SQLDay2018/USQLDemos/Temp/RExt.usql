@@ -1,0 +1,64 @@
+﻿REFERENCE ASSEMBLY [master].[ExtR];
+
+DECLARE @output string = @"/SQLDay2018/Results/R_Ext.csv";
+
+// R script to run
+DECLARE @myRScript = @"
+# install the signal package,
+#install.packages('signal_0.7-6.zip', repos = NULL)
+# load the signal package,
+#require(signal)
+inputFromUSQL$SmootMesValue <- inputFromUSQL$MesValue * 10000
+outputToUSQL <- data.frame(Id = inputFromUSQL$Id,
+                 SmootMesValue = inputFromUSQL$SmootMesValue,
+                 MesDate = inputFromUSQL$MesDate
+                 )
+";
+
+@ds =
+    SELECT *
+    FROM(
+        VALUES
+        (
+            0,
+            new DateTime(2018, 05, 09, 05, 00, 00),
+            2,
+            "File0"
+        ),
+        (
+            1,
+            new DateTime(2018, 05, 09, 05, 00, 00),
+            1,
+            "File1"
+        ),
+        (
+            1,
+            new DateTime(2018, 05, 09, 05, 00, 01),
+            12,
+            "File1"
+        )
+        ) AS T (Id,MesDate,MesValue,FileName);
+
+@ds =
+    SELECT Id,
+           MesValue,
+           MesDate.Ticks AS MesDate,
+           FileName AS FileName
+    FROM @ds;
+
+@rScriptOutput =
+    REDUCE @ds
+    PRESORT MesDate
+    ON FileName,Id
+    PRODUCE Id, MesDate double,MesValue double, SmootMesValue double, FileName
+    READONLY FileName 
+USING new Extension.R.Reducer(command : @myRScript, rReturnType:"dataframe", stringsAsFactors:false);
+
+
+@rScriptOutput =
+    SELECT Id,SmootMesValue, new DateTime(Convert.ToInt64(MesDate) ) AS MesDate 
+    FROM @rScriptOutput;
+
+OUTPUT @rScriptOutput
+TO @output
+USING Outputters.Csv(outputHeader : true);

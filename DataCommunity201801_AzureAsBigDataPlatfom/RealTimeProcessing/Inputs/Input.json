@@ -1,0 +1,24 @@
+﻿{
+  "Name": "Input",
+  "Type": "Data Stream",
+  "DataSourceType": "Event Hub",
+  "Sample": null,
+  "EventHubProperties": {
+    "ConsumerGroupName": null,
+    "EventHubName": "mydemodevices",
+    "ServiceBusNamespace": "bdpmydevlabs",
+    "SharedAccessPolicyKey": null,
+    "SharedAccessPolicyName": "MyAuthRuleName"
+  },
+  "BlobStorageProperties": null,
+  "IoTHubProperties": null,
+  "BlobReferenceProperties": null,
+  "Serialization": {
+    "Encoding": "UTF8",
+    "Type": "Json",
+    "FieldDelimiter": null,
+    "Format": null
+  },
+  "DataSourceCredentialDomain": "dd34deaa-cf20-4156-b93f-65bc9fef44bd.StreamAnalyticsCredential",
+  "ScriptType": "Input"
+}

@@ -1,0 +1,27 @@
+﻿REFERENCE ASSEMBLY [master].[ExtPython];
+DEPLOY RESOURCE @"/SQLDay2018/PythonIrisUseSVMModelUSQL.py";
+DEPLOY RESOURCE @"/SQLDay2018/iris_model_svm.bin";
+DECLARE @input string = @"/SQLDay2018/DataSets/ManyFiles/{Par}.csv";
+DECLARE @output string = @"/SQLDay2018/Results/Paritions.csv";
+
+
+@Input =
+    EXTRACT SepalLength float,
+            SepalWidth float,
+            PetalLength float,
+            PetalWidth float,
+            Name string,
+            Par string
+    FROM @input
+    USING Extractors.Csv();
+
+@Out =
+    REDUCE @Input ON Par
+    PRODUCE 
+            Par string,
+            RowCount double
+    USING new Extension.Python.Reducer("PythonIrisUseSVMModelUSQL.py");
+
+OUTPUT @Out
+TO @output 
+USING Outputters.Csv();

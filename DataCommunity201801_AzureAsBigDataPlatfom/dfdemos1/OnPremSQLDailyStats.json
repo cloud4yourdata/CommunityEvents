@@ -1,0 +1,64 @@
+{
+  "name": "OnPremSQLDailyStats",
+  "properties": {
+    "structure": [
+      {
+        "name": "ObjectId",
+        "type": "Int32"
+      },
+      {
+        "name": "MeasDate",
+        "type": "Datetime"
+      },
+      {
+        "name": "MinWaterLevel",
+        "type": "Double"
+      },
+      {
+        "name": "MaxWaterLevel",
+        "type": "Double"
+      },
+      {
+        "name": "AvgWaterLevel",
+        "type": "Double"
+      },
+      {
+        "name": "MinTemperature",
+        "type": "Double"
+      },
+      {
+        "name": "MaxTemperature",
+        "type": "Double"
+      },
+      {
+        "name": "AvgTemperature",
+        "type": "Double"
+      },
+      {
+        "name": "MinHumidity",
+        "type": "Double"
+      },
+      {
+        "name": "MaxHumidity",
+        "type": "Double"
+      },
+      {
+        "name": "AvgHumidity",
+        "type": "Double"
+      }
+    ],
+    "published": false,
+    "type": "SqlServerTable",
+    "linkedServiceName": "Destination-OnPremSQL-lnl",
+    "typeProperties": {
+      "tableName": "[dbo].[Measurements]"
+    },
+    "availability": {
+      "frequency": "Day",
+      "interval": 1
+    },
+    "external": false,
+    "policy": {}
+  },
+  "$schema": "http://datafactories.schema.management.azure.com/schemas/2015-09-01/Microsoft.DataFactory.Table.json"
+}

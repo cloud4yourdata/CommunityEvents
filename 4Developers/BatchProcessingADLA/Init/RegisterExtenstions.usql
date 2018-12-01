@@ -1,0 +1,19 @@
+﻿USE DATABASE Demo4Developers;
+//Azure Path
+DECLARE @assembliesBasePath string = @"/myAssemblies/";
+//DECLARE @assembliesBasePath string = @"d:\Repos\Cloud4YourData\Demos\4Developers\BatchProcessingADLA\Assemblies\";
+DECLARE @AvroDllPath string = @assembliesBasePath + "Avro.dll";
+DECLARE @FormatsDllPath string = @assembliesBasePath + "Microsoft.Analytics.Samples.Formats.dll";
+DECLARE @JsonDllPath string = @assembliesBasePath + "Newtonsoft.Json.dll";
+DECLARE @log4netDllPath string = @assembliesBasePath + "log4net.dll";
+DROP ASSEMBLY IF EXISTS [Avro];
+CREATE ASSEMBLY [Avro]
+FROM @AvroDllPath;
+DROP ASSEMBLY IF EXISTS [Microsoft.Analytics.Samples.Formats];
+CREATE ASSEMBLY [Microsoft.Analytics.Samples.Formats]
+FROM @FormatsDllPath;
+DROP ASSEMBLY IF EXISTS [Newtonsoft.Json];
+CREATE ASSEMBLY [Newtonsoft.Json]
+FROM @JsonDllPath;
+DROP ASSEMBLY IF EXISTS [log4net];
+CREATE ASSEMBLY [log4net] FROM @log4netDllPath;

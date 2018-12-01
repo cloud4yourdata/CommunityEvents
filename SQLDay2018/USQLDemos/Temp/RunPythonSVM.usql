@@ -1,0 +1,38 @@
+﻿REFERENCE ASSEMBLY [master].[ExtPython];
+DEPLOY RESOURCE @"/SQLDay2018/PythonIrisUseSVMModelUSQL.py";
+DEPLOY RESOURCE @"/SQLDay2018/iris_model_svm.bin";
+DECLARE @input string = @"/SQLDay2018/DataSets/iris.csv";
+DECLARE @output string = @"/SQLDay2018/Results/Python_Iris_sklearn_SVM.csv";
+
+
+@Input =
+    EXTRACT SepalLength float,
+            SepalWidth float,
+            PetalLength float,
+            PetalWidth float,
+            Name string
+    FROM @input
+    USING Extractors.Csv();
+
+//@Out =
+//    REDUCE @Input ALL
+//    PRODUCE SepalLength double,
+//            SepalWidth double,
+//            PetalLength double,
+//            PetalWidth double,
+//            Name string,
+//            Predicted string
+//    USING new Extension.Python.Reducer("PythonIrisUseSVMModelUSQL.py");
+
+@Out =
+    REDUCE @Input ALL
+    PRODUCE SepalLength double,
+            SepalWidth double,
+            PetalLength double,
+            PetalWidth double,
+            Predicted string
+    USING new Extension.Python.Reducer("PythonIrisUseSVMModelUSQL.py");
+
+OUTPUT @Out
+TO @output 
+USING Outputters.Csv();

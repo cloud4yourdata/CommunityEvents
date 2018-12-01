@@ -1,0 +1,62 @@
+﻿USE DATABASE [4Developers];
+REFERENCE ASSEMBLY [ADLAExt];
+USING BreakRangeReducer = ADLAExt.Reducers.BreakRangeReducer;
+
+DECLARE @outputFile string = @"d:\Repos\Cloud4YourData\SQLDay2018\Misc\DemosResults\Local\reducer.csv";
+
+@sample =
+    SELECT *
+    FROM(
+        VALUES
+        
+        (
+            1,
+            new DateTime(2017, 01, 01, 06, 01, 00),
+            new DateTime(2017, 01, 01, 07, 00, 00),
+            200.00
+        ),
+        (
+            1,
+            new DateTime(2017, 01, 01, 08, 00, 00),
+            new DateTime(2017, 01, 01, 09, 00, 00),
+            900.00
+        ),
+        (
+            2,
+            new DateTime(2017, 01, 01, 06, 01, 00),
+            new DateTime(2017, 01, 01, 07, 00, 00),
+            2.00
+        ),
+        (
+            2,
+            new DateTime(2017, 01, 01, 07, 01, 00),
+            new DateTime(2017, 01, 01, 09, 00, 00),
+            9.00
+        ),
+          (
+            1,
+            new DateTime(2017, 01, 01, 05, 00, 00),
+            new DateTime(2017, 01, 01, 06, 00, 00),
+            100.00
+        )
+      
+        ) AS T (id, begin, end, value);
+
+
+@results =
+    REDUCE @sample 
+    PRESORT begin
+    ON id
+    PRODUCE id,
+            begin,
+            end,
+            value double
+    READONLY id
+    REQUIRED begin,
+             end,
+             value
+    USING new BreakRangeReducer(180);
+
+OUTPUT @results
+TO "results.csv"
+USING Outputters.Csv(outputHeader : true);

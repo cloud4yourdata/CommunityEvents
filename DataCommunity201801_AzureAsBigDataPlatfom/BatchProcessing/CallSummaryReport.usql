@@ -1,0 +1,7 @@
+﻿DECLARE @startDate DateTime = new DateTime(2017, 11, 20, 05, 00, 00);
+DECLARE @endDate DateTime = new DateTime(2017, 11, 21, 07, 00, 00);
+DemoPoC.dbo.usp_ComputeSummaryReport
+(
+    @startDate,
+    @endDate
+);

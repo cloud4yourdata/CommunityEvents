@@ -1,0 +1,52 @@
+﻿USE DATABASE [4Developers];
+REFERENCE ASSEMBLY [ADLAExt];
+
+USING IpConverter = ADLAExt.Utils.IpConverter;
+
+DECLARE @logsLocation string = @"D:\AppData\BIGDATA\IISLogs\{filename}";
+@iisLogs = EXTRACT
+        filename string,    
+        date DateTime,
+        time string,
+        s_ip string,
+        cs_method string,
+        cs_uristem string,
+        cs_uriquery string,
+        s_port int,
+        cs_username string,
+        c_ip string,
+        cs_useragent string,
+        cs_referer string,
+        sc_status int,
+        sc_substatus int,
+        sc_win32status int,
+        s_timetaken int
+    FROM @logsLocation
+    USING Extractors.Text(delimiter:' ',silent:true);
+
+@ds =
+    SELECT IpConverter.ToIp4Format(c_ip) AS Ip,
+           date.Date AS Date
+    FROM @iisLogs;
+
+@dsIps = SELECT Date,Ip, COUNT(*) AS ReqCount
+             FROM @ds 
+                  WHERE Ip != "0.0.0.1"
+       GROUP BY Ip,Date;
+
+@dsDays =
+    SELECT Date.DayOfWeek.ToString() AS DayOfWeek,
+           COUNT( * ) AS ReqCount
+    FROM @ds
+    GROUP BY Date.DayOfWeek.ToString();
+;
+
+OUTPUT @dsIps 
+TO @"d:\Repos\Cloud4YourData\Demos\4DevKrakow2018\output\iisStats.log"
+ORDER BY Date DESC,ReqCount DESC
+USING Outputters.Csv();
+
+OUTPUT @dsDays
+TO @"d:\Repos\Cloud4YourData\Demos\4DevKrakow2018\output\iisStatsDayOfWeek.log"
+ORDER BY DayOfWeek DESC,ReqCount DESC
+USING Outputters.Csv();

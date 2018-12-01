@@ -1,0 +1,79 @@
+﻿USE DATABASE DemoPoC;
+REFERENCE ASSEMBLY [Newtonsoft.Json];
+REFERENCE ASSEMBLY [log4net];
+REFERENCE ASSEMBLY [Avro]; 
+REFERENCE ASSEMBLY [Microsoft.Analytics.Samples.Formats];
+
+//DECLARE @input_file string = @"D:\\2017-11-07_bdpmydevlabs_mydemodevices_3_112844.csv.avro";
+DECLARE @output_file string = @"file.csv";
+DECLARE @input_file string = @"D:\\twitter.avro";
+
+//@rs =
+//    EXTRACT
+//        SequenceNumber  long,
+//        Offset string,
+//        EnqueuedTimeUtc  string,
+//        SystemProperties   string,
+//        Properties string,
+//        Body    byte[]
+//    FROM @input_file
+//    USING new Microsoft.Analytics.Samples.Formats.ApacheAvro.AvroExtractor(@"{
+//    'type':'record',
+//    'name':'EventData',
+//    'namespace':'Microsoft.ServiceBus.Messaging',
+//    'fields':[
+//                 {'name':'SequenceNumber','type':'long'},
+//                 {'name':'Offset','type':'string'},
+//                 {'name':'EnqueuedTimeUtc','type':'string'},
+//                 {'name':'SystemProperties','type':{'type':'map','values':['long','double','string','bytes']}},
+//                 {'name':'Properties','type':{'type':'map','values':['long','double','string','bytes']}},
+//                 {'name':'Body','type':['null','bytes']}
+//             ]
+//	}"
+//);
+//
+//@rs = SELECT  Body  FROM @rs;
+
+@rs =
+    EXTRACT
+        createdat               string,
+        topic                   string,
+        sentimentscore          long,
+        eventprocessedutctime   string,
+        partitionid             long,
+        eventenqueuedutctime    string
+    FROM @input_file
+    USING new Microsoft.Analytics.Samples.Formats.ApacheAvro.AvroExtractor(@"
+    {
+      ""type"" : ""record"",
+      ""name"" : ""GenericFromIRecord0"",
+      ""namespace"" : ""Microsoft.Streaming.Avro"",
+      ""fields"" : [ {
+        ""name"" : ""createdat"",
+        ""type"" : [ ""null"", ""string"" ]
+      }, {
+        ""name"" : ""topic"",
+        ""type"" : [ ""null"", ""string"" ]
+      }, {
+        ""name"" : ""sentimentscore"",
+        ""type"" : [ ""null"", ""long"" ]
+      }, {
+        ""name"" : ""eventprocessedutctime"",
+        ""type"" : [ ""null"", ""string"" ]
+      }, {
+        ""name"" : ""partitionid"",
+        ""type"" : [ ""null"", ""long"" ]
+      }, {
+        ""name"" : ""eventenqueuedutctime"",
+        ""type"" : [ ""null"", ""string"" ]
+      } ]
+    }
+    ");
+
+@cnt =
+    SELECT topic, COUNT(*) AS cnt
+    FROM @rs
+    GROUP BY topic;
+
+OUTPUT @cnt TO @output_file USING Outputters.Text();
+

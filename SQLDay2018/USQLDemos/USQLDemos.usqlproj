@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>ef4e4e50-dc2c-4465-bd8d-2900967617e5</ProjectGuid>
+    <OutputType>File</OutputType>
+    <AssemblyName>Algebra.xml</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <Name>USQLDemos</Name>
+    <RootNamespace>USQLDemos</RootNamespace>
+    <RuntimeVersion>default</RuntimeVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Script Include="Demos\Demo1\Demo001_VertexInfo.usql" />
+    <Script Include="Demos\Demo1\Demo002_XmlProcessor.usql" />
+    <Script Include="Demos\Demo2\Demo004_CogitiveTagger.usql" />
+    <Script Include="Demos\Demo2\Demo005_CogitiveFaces.usql" />
+    <Script Include="Demos\Demo3\Demo003_Reducer.usql" />
+    <Script Include="Demos\Init\CreateDatabase.usql" />
+    <Script Include="Demos\Init\RegisterCognitiveAssemblies.usql" />
+    <Script Include="Demos\Init\RegisterExtensions.usql" />
+    <Script Include="Demos\PythonR\Python\Demo000_ProcessDevDataMendianPy.usql" />
+    <Script Include="Demos\PythonR\Python\Demo001_HousePrices.usql" />
+    <Script Include="Demos\PythonR\RExtInfo\RColMarshalling.usql" />
+    <Script Include="Demos\PythonR\RExtInfo\RExtRunInfo.usql" />
+    <Script Include="Demos\PythonR\R\Demo000_ProcessDevDataMendianR.usql" />
+    <Script Include="Demos\PythonR\R\Demo001_ProcessDevDataMedianRevoscaleR.usql" />
+    <Script Include="Temp\Partitions.usql" />
+    <Script Include="Temp\RExt.usql" />
+    <Script Include="Temp\RunPythonSVM.usql" />
+    <Script Include="Temp\RunPythonSVMMany.usql" />
+    <Script Include="Temp\SampleIris.usql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ScriptCode Include="Demos\Demo1\Demo001_VertexInfo.usql.cs">
+      <DependentUpon>Demos\Demo1\Demo001_VertexInfo.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo1\Demo002_XmlProcessor.usql.cs">
+      <DependentUpon>Demos\Demo1\Demo002_XmlProcessor.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo2\Demo004_CogitiveTagger.usql.cs">
+      <DependentUpon>Demos\Demo2\Demo004_CogitiveTagger.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo2\Demo005_CogitiveFaces.usql.cs">
+      <DependentUpon>Demos\Demo2\Demo005_CogitiveFaces.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo3\Demo003_Reducer.usql.cs">
+      <DependentUpon>Demos\Demo3\Demo003_Reducer.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Init\CreateDatabase.usql.cs">
+      <DependentUpon>Demos\Init\CreateDatabase.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Init\RegisterCognitiveAssemblies.usql.cs">
+      <DependentUpon>Demos\Init\RegisterCognitiveAssemblies.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Init\RegisterExtensions.usql.cs">
+      <DependentUpon>Demos\Init\RegisterExtensions.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\PythonR\Python\Demo000_ProcessDevDataMendianPy.usql.cs">
+      <DependentUpon>Demos\PythonR\Python\Demo000_ProcessDevDataMendianPy.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\PythonR\Python\Demo001_HousePrices.usql.cs">
+      <DependentUpon>Demos\PythonR\Python\Demo001_HousePrices.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\PythonR\Python\HousePrices1.usql.py">
+      <DependentUpon>Demos\PythonR\Python\Demo001_HousePrices.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\PythonR\RExtInfo\RColMarshalling.usql.cs">
+      <DependentUpon>Demos\PythonR\RExtInfo\RColMarshalling.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\PythonR\RExtInfo\RColMarshalling.usql.r">
+      <DependentUpon>Demos\PythonR\RExtInfo\RColMarshalling.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\PythonR\RExtInfo\RExtRunInfo.usql.cs">
+      <DependentUpon>Demos\PythonR\RExtInfo\RExtRunInfo.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\PythonR\RExtInfo\RExtRunInfo.usql.r">
+      <DependentUpon>Demos\PythonR\RExtInfo\RExtRunInfo.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\PythonR\R\Demo000_ProcessDevDataMendianR.usql.cs">
+      <DependentUpon>Demos\PythonR\R\Demo000_ProcessDevDataMendianR.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\PythonR\R\Demo001_ProcessDevDataMedianRevoscaleR.usql.cs">
+      <DependentUpon>Demos\PythonR\R\Demo001_ProcessDevDataMedianRevoscaleR.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\PythonR\R\Demo001_ProcessDevDataMedianRevoscaleR1.usql.r">
+      <DependentUpon>Demos\PythonR\R\Demo001_ProcessDevDataMedianRevoscaleR.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Temp\Partitions.usql.cs">
+      <DependentUpon>Temp\Partitions.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Temp\RExt.usql.cs">
+      <DependentUpon>Temp\RExt.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Temp\RunPythonSVM.usql.cs">
+      <DependentUpon>Temp\RunPythonSVM.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Temp\RunPythonSVMMany.usql.cs">
+      <DependentUpon>Temp\RunPythonSVMMany.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Temp\SampleIris.usql.cs">
+      <DependentUpon>Temp\SampleIris.usql</DependentUpon>
+    </ScriptCode>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Demos" />
+    <Folder Include="Demos\Init" />
+    <Folder Include="Demos\Demo1" />
+    <Folder Include="Demos\Demo2" />
+    <Folder Include="Demos\Demo3" />
+    <Folder Include="Demos\PythonR" />
+    <Folder Include="Demos\PythonR\Python" />
+    <Folder Include="Demos\PythonR\RExtInfo" />
+    <Folder Include="Demos\PythonR\R" />
+    <Folder Include="Temp" />
+  </ItemGroup>
+  <!-- check for SDK Build target in current path then in USQLSDKPath in the case of command line build -->
+  <Import Project="UsqlSDKBuild.targets" Condition="'$(BuildingInsideVisualStudio)' != 'true' And  Exists('UsqlSDKBuild.targets')" />
+  <Import Project="$(USQLSDKPath)\UsqlSDKBuild.targets" Condition="'$(BuildingInsideVisualStudio)' != 'true' And !Exists('UsqlSDKBuild.targets') And '$(USQLSDKPath)' != '' And Exists('$(USQLSDKPath)\UsqlSDKBuild.targets')" />
+  <!-- backward compatible with IDE build -->
+  <Import Project="$(AppData)\Microsoft\DataLake\MsBuild\1.0\Usql.targets" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
+</Project>

@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>fe3c25eb-cf7a-4cf9-bab4-1489175f8800</ProjectGuid>
+    <OutputType>File</OutputType>
+    <AssemblyName>USQLNetDemos.usqlpack</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <USQLProjectVersion>2</USQLProjectVersion>
+    <Name>USQLNetDemos</Name>
+    <RootNamespace>USQLNetDemos</RootNamespace>
+    <RuntimeVersion>default</RuntimeVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Script Include="Demos\Demo001ImageHist.usql" />
+    <Script Include="Demos\Demo003CognitiveTagger.usql" />
+    <Script Include="Demos\Demo004CognitiveFaces.usql" />
+    <Script Include="Demos\Demo000IISLogs.usql" />
+    <Script Include="Demos\Demo005ADLUInfo.usql" />
+    <Script Include="Demos\Demo006Stackoverflow.usql" />
+    <Script Include="Demos\Demo007PythonDeploy.usql" />
+    <Script Include="Demos\Samples\Array.usql" />
+    <Script Include="Demos\Samples\Map.usql" />
+    <Script Include="Demos\Samples\Processor.usql" />
+    <Script Include="Demos\Samples\Reducer.usql" />
+    <Script Include="Demos\Samples\UDO.usql" />
+    <Script Include="Init\CreateDatabase.usql" />
+    <Script Include="Init\RegisterCognitiveAssemblies.usql" />
+    <Script Include="Init\RegisterExtensions.usql" />
+    <ScriptCode Include="Demos\Demo001ImageHist.usql.cs">
+      <DependentUpon>Demos\Demo001ImageHist.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo003CognitiveTagger.usql.cs">
+      <DependentUpon>Demos\Demo003CognitiveTagger.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo004CognitiveFaces.usql.cs">
+      <DependentUpon>Demos\Demo004CognitiveFaces.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo000IISLogs.usql.cs">
+      <DependentUpon>Demos\Demo000IISLogs.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo005ADLUInfo.usql.cs">
+      <DependentUpon>Demos\Demo005ADLUInfo.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo006Stackoverflow.usql.cs">
+      <DependentUpon>Demos\Demo006Stackoverflow.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo007PythonDeploy.usql.cs">
+      <DependentUpon>Demos\Demo007PythonDeploy.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Samples\Array.usql.cs">
+      <DependentUpon>Demos\Samples\Array.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Samples\Map.usql.cs">
+      <DependentUpon>Demos\Samples\Map.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Samples\Processor.usql.cs">
+      <DependentUpon>Demos\Samples\Processor.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Samples\Reducer.usql.cs">
+      <DependentUpon>Demos\Samples\Reducer.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Samples\UDO.usql.cs">
+      <DependentUpon>Demos\Samples\UDO.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Init\CreateDatabase.usql.cs">
+      <DependentUpon>Init\CreateDatabase.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Init\RegisterCognitiveAssemblies.usql.cs">
+      <DependentUpon>Init\RegisterCognitiveAssemblies.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Init\RegisterExtensions.usql.cs">
+      <DependentUpon>Init\RegisterExtensions.usql</DependentUpon>
+    </ScriptCode>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Demos\Samples" />
+    <Folder Include="Init" />
+    <Folder Include="Demos" />
+  </ItemGroup>
+  <!-- check for SDK Build target in current path then in USQLSDKPath-->
+  <Import Project="UsqlSDKBuild.targets" Condition="Exists('UsqlSDKBuild.targets')" />
+  <Import Project="$(USQLSDKPath)\UsqlSDKBuild.targets" Condition="!Exists('UsqlSDKBuild.targets') And '$(USQLSDKPath)' != '' And Exists('$(USQLSDKPath)\UsqlSDKBuild.targets')" />
+</Project>

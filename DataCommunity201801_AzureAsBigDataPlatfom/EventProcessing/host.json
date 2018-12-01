@@ -1,0 +1,10 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=mystoregelab;AccountKey=ktmgg0dGkVT/E5DIXrzk7vvTA6oFWOMxEvvgXRMARvJotuYICRhjed4NZkBxk6QR32uxtDDxBIWrWqPEaaNdqQ==;EndpointSuffix=core.windows.net",
+    "AzureWebJobsDashboard": "",
+    "Alerts": "Endpoint=sb://bdpmydevlabs.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=t1oWq1KYT8eQJoSkqVQaPFBsdgtlTK7MtfU+A/FLSYk="
+  }
+
+
+}

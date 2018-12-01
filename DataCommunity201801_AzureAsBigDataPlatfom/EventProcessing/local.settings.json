@@ -1,0 +1,18 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "WEBSITE_SLOT_NAME": "Production",
+    "FUNCTIONS_EXTENSION_VERSION": "~1",
+    "WEBSITE_ENCRYPTION_KEY": "vDruFCD43NAbslfWePceCZnWbvpLRqGmjbKL4LkaXrM=",
+    "ScmType": "None",
+    "WEBSITE_AUTH_ENABLED": "False",
+    "FUNCTION_APP_EDIT_MODE": "readwrite",
+    "AzureWebJobsDashboard": "DefaultEndpointsProtocol=https;AccountName=mystoregelab;AccountKey=ktmgg0dGkVT/E5DIXrzk7vvTA6oFWOMxEvvgXRMARvJotuYICRhjed4NZkBxk6QR32uxtDDxBIWrWqPEaaNdqQ==",
+    "WEBSITE_NODE_DEFAULT_VERSION": "6.5.0",
+    "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING": "DefaultEndpointsProtocol=https;AccountName=mystoregelab;AccountKey=ktmgg0dGkVT/E5DIXrzk7vvTA6oFWOMxEvvgXRMARvJotuYICRhjed4NZkBxk6QR32uxtDDxBIWrWqPEaaNdqQ==",
+    "WEBSITE_CONTENTSHARE": "waterdemob1a3",
+    "bdpmydevlabs_RootManageSharedAccessKey_EVENTHUB": "Endpoint=sb://bdpmydevlabs.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=t1oWq1KYT8eQJoSkqVQaPFBsdgtlTK7MtfU+A/FLSYk=;EntityPath=wateralertsmax",
+    "WEBSITE_SITE_NAME": "waterdemo",
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=mystoregelab;AccountKey=ktmgg0dGkVT/E5DIXrzk7vvTA6oFWOMxEvvgXRMARvJotuYICRhjed4NZkBxk6QR32uxtDDxBIWrWqPEaaNdqQ=="
+  }
+}

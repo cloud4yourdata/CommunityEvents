@@ -1,0 +1,38 @@
+﻿REFERENCE ASSEMBLY [master].[ExtR];
+
+DECLARE @output string = @"/SQLDay2018/Results/R_Ext_Marshalling.csv";
+@ds =
+    SELECT *
+    FROM(
+        VALUES
+        (
+            0,
+            "A",
+            2.0,
+            new DateTime(2018, 05, 09, 05, 00, 00)
+        ),
+        (
+           1,
+            "B",
+            4.0,
+            new DateTime(2018, 05, 09, 05, 00, 00)
+        )
+        ) AS T (ColInt,ColString,ColNum,ColDate);
+
+
+@ds =
+    SELECT ColInt,
+           ColString,
+           ColNum,
+           ColDate.Ticks AS ColDate //Error: "The given key was not present in the dictionary."
+    FROM @ds;
+
+@rScriptOutput =
+    REDUCE @ds ALL
+    PRODUCE Columns string
+    USING new Extension.R.Reducer(scriptFile : "RColMarshalling.usql.r", rReturnType : "dataframe", stringsAsFactors : false);
+
+
+OUTPUT @rScriptOutput
+TO @output
+USING Outputters.Csv(outputHeader : true);

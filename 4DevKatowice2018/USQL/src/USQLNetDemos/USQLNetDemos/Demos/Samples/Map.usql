@@ -1,0 +1,29 @@
+﻿@sample =
+    SELECT *
+    FROM(
+        VALUES
+        (
+            new SqlMap<string, SqlArray<string>>
+            {
+            {"Project1", new SqlArray<string>{ "Resource1", "Resource2", "Resource3"}},
+            {"Project2", new SqlArray<string>{ "Resource1", "Resource3"}}
+            }
+        )
+        ) AS P(assignment);
+
+@assignments =
+    SELECT P.projectName, resources
+    FROM @sample
+         CROSS APPLY
+             EXPLODE(assignment) AS P(projectName, resources);
+
+@assignments =
+    SELECT projectName,
+           U.userName
+    FROM @assignments
+         CROSS APPLY
+             EXPLODE(resources) AS U(userName);
+
+OUTPUT @assignments
+TO "assignments.csv"
+USING Outputters.Csv();

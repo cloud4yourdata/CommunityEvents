@@ -1,0 +1,33 @@
+﻿USE DATABASE DemoPoC;
+REFERENCE ASSEMBLY [Newtonsoft.Json];
+REFERENCE ASSEMBLY [Microsoft.Analytics.Samples.Formats];
+
+DECLARE @inputDevices string = @"d:\Repos\Cloud4YourData\Demos\AzureAsBigDataPlatfom\Data\Devices.json";
+
+@json =
+    EXTRACT jsonString string
+    FROM @inputDevices
+    USING Extractors.Text(delimiter : '\b', quoting : false);
+
+@jsonify =
+    SELECT Microsoft.Analytics.Samples.Formats.Json.JsonFunctions.JsonTuple(jsonString) AS dev
+    FROM @json;
+//@devices =
+//    SELECT int.Parse(dev["id"]) AS id,
+//           double.Parse(dev["lat"]) AS lat,
+//           double.Parse(dev["lon"]) AS lon,
+//           int.Parse(dev["min"]) AS min,
+//           int.Parse(dev["max"]) AS max
+//    FROM @jsonify;
+
+@devices =
+    SELECT int.Parse(dev["id"]) AS id,
+          dev["lat"] AS lat,
+          dev["lon"] AS lon,
+          dev["min"] AS min,
+          dev["max"] AS max
+    FROM @jsonify;
+
+OUTPUT @devices
+TO "Dev.csv"
+USING Outputters.Csv(outputHeader : true);

@@ -1,0 +1,41 @@
+﻿DECLARE @imgFiles string = @"D:\AppData\BIGDATA\Images2\{fileName}.jpg";
+USE DATABASE [4Developers];
+//Add reference to ADLExt Assembly
+REFERENCE ASSEMBLY ADLAExt;
+//Create Aliases to our classes
+USING BinaryExtractor = ADLAExt.Extractors.BinaryContentExtractor;
+USING ImageColorsProcessor = ADLAExt.Processors.ImageColorProducer;
+
+//Load (Extract) Data
+@rs =
+    EXTRACT content byte[],
+            fileName string
+    FROM @imgFiles
+    USING new BinaryExtractor();
+
+//Add new column colors
+@ds =
+    SELECT content,fileName, new SQL.MAP<int,string>() AS colors
+    FROM @rs;
+
+//Proces our images
+@ds =
+    PROCESS @ds
+    PRODUCE content,colors,fileName
+            READONLY fileName
+    USING new ImageColorsProcessor(3);
+
+//Change the processing result format
+@ds =
+    SELECT fileName,
+           order,
+           colorName
+    FROM @ds
+         CROSS APPLY
+             EXPLODE(colors) AS colors(order, colorName);
+//Save image
+OUTPUT @ds
+TO @"d:\Repos\Cloud4YourData\Demos\4DevKrakow2018\output\colorResult.csv"
+ORDER BY fileName,
+         order
+USING Outputters.Csv();

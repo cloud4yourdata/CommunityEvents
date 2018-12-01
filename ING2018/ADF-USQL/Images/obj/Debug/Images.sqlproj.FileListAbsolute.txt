@@ -1,5 +1,0 @@
-D:\Repos\Cloud4YourData\CommunityEvents\ING2018\ADF-USQL\Images\bin\Debug\Images.dacpac
-D:\Repos\Cloud4YourData\CommunityEvents\ING2018\ADF-USQL\Images\bin\Debug\Images.dll
-D:\Repos\Cloud4YourData\CommunityEvents\ING2018\ADF-USQL\Images\bin\Debug\Images.pdb
-D:\Repos\Cloud4YourData\CommunityEvents\ING2018\ADF-USQL\Images\obj\Debug\Images.dll
-D:\Repos\Cloud4YourData\CommunityEvents\ING2018\ADF-USQL\Images\obj\Debug\Images.pdb

@@ -1,0 +1,119 @@
+﻿USE DATABASE [4Developers];
+REFERENCE SYSTEM ASSEMBLY [System.Xml];
+REFERENCE ASSEMBLY ADLAExt;
+USING XmlXPathProcessor = ADLAExt.Processors.XmlXPathProcessor;
+USING StackOverflowCategoryProducer = ADLAExt.Processors.StackOverflowCategoryProducer;
+DECLARE @inputFile string = @"mySamples/StackOverflow/Posts.xml";
+//DECLARE @inputFile string = @"D:\AppData\BIGDATA\StackOverFlow\programmers\Posts.xml";
+
+
+@ds =
+    EXTRACT line string
+    FROM @inputFile
+    USING Extractors.Text(delimiter:'\r',silent:true);
+@ds =
+    SELECT line AS content,
+           "Tags" AS Tags,
+           "Id" AS Id,
+           "ViewCount" AS ViewCount,
+           "CreationDate" AS CreationDate,
+           "Title" AS Title,
+           "AnswerCount" AS AnswerCount,
+           "OwnerUserId" AS OwnerUserId
+    FROM @ds;
+
+@ds =
+    PROCESS @ds
+    PRODUCE content ,
+            Tags,
+            Id,
+            ViewCount,
+            CreationDate,
+            Title,
+            AnswerCount,
+            OwnerUserId
+            READONLY content
+    USING new XmlXPathProcessor( xPathQuery : "/row", columnPaths : new SQL.MAP<string, string>
+              {
+              {"Id", "Id"},
+              {"CreationDate", "CreationDate"},
+              {"ViewCount", "ViewCount"},
+              {"Tags", "Tags"},
+              {"Title", "Title"},
+              {"AnswerCount", "AnswerCount"},
+              {"OwnerUserId", "OwnerUserId"},
+              }
+              );
+@ds =
+    SELECT Tags,
+           Id,
+           ViewCount,
+           CreationDate,
+           Title,
+           AnswerCount,
+           OwnerUserId
+    FROM @ds
+    WHERE Id != string.Empty;
+
+@postTags =
+    SELECT Int32.Parse(p.Id) AS Id,
+           string.IsNullOrEmpty(p.ViewCount) ? 0 : Int32.Parse(p.ViewCount) AS ViewCount,
+           DateTime.Parse(p.CreationDate) AS CreationDate,
+           Title,
+           string.IsNullOrEmpty(OwnerUserId) ? 0 : Int32.Parse(OwnerUserId) AS UserId,
+           string.IsNullOrEmpty(p.AnswerCount) ? 0 : Int32.Parse(p.AnswerCount) AS AnswerCount,
+           new SQL.ARRAY<string>(p.Tags.Split('>').Select(t => t.Replace("<", ""))) AS tags
+    FROM @ds AS p;
+
+@postWithSimpleTags =
+    SELECT pt.Id,
+           pt.ViewCount,
+           Tag,
+           CreationDate.Year AS Year,
+           CreationDate.Month AS Month,
+           CreationDate,
+           Title,
+           UserId,
+           AnswerCount,
+           "category" AS Category
+    FROM @postTags AS pt
+         CROSS APPLY
+             EXPLODE(tags) AS posttags(Tag);
+
+@postsByCategory =
+    PROCESS @postWithSimpleTags
+    PRODUCE Tag,
+            Category,
+            Id,
+            ViewCount,
+            Year,
+            Month,
+            CreationDate,
+            Title,
+            UserId,
+            AnswerCount
+    READONLY Id,
+             ViewCount,
+             Year,
+             Month,
+             CreationDate,
+             Title,
+             UserId,
+             AnswerCount
+    USING new StackOverflowCategoryProducer();
+
+@results =
+    SELECT Category,
+           Year,
+           Month,
+           SUM(ViewCount) AS ViewCount
+    FROM @postsByCategory
+    WHERE Category != "other"
+    GROUP BY Category,
+             Year,
+             Month;
+
+OUTPUT @results
+TO "/4Developers/Results/StackOverflowTechRadar.cvs"
+ORDER BY Year DESC,Month DESC,ViewCount DESC
+USING Outputters.Csv(quoting : true);

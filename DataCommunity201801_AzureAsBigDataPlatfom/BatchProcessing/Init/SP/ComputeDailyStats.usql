@@ -1,0 +1,43 @@
+﻿DROP PROCEDURE IF EXISTS DemoPoC.dbo.usp_ComputeDailyStats;
+CREATE PROCEDURE DemoPoC.dbo.usp_ComputeDailyStats(@startDate DateTime, @endDate DateTime)
+BEGIN
+    DECLARE @processDate DateTime = @startDate;
+    DECLARE @processFolderName string = @processDate.ToString("yyyy-MM-dd");
+    DECLARE @inputData string = @"/mySamples/DevicesEvents/" + @processFolderName + "/{filename}.csv";
+    DECLARE @outputReport string = @"/mySamples/DevicesEvents/Results/" + @processFolderName + ".csv";
+
+    @ds =
+        EXTRACT objectId int,
+                timestamp DateTime,
+                waterLevel double,
+                temperature double,
+                humidity double,
+                eventProcessedUtcTime DateTime,
+                partitionId double,
+                eventEnqeuedUtcTime DateTime,
+                filename string
+        FROM @inputData
+        USING Extractors.Csv(skipFirstNRows : 1);
+
+    @stats =
+        SELECT objectId,
+               eventEnqeuedUtcTime.Date AS MeasDate,
+               MIN(waterLevel) AS minWaterLevel,
+               MAX(waterLevel) AS maxWaterLevel,
+               AVG(waterLevel) AS avgWaterLevel,
+               MIN(temperature) AS minTemperature,
+               MAX(temperature) AS maxTemperature,
+               AVG(temperature) AS avgTemperature,
+               MIN(humidity) AS minHumidity,
+               MAX(humidity) AS maxHumidity,
+               AVG(humidity) AS avgHumidity
+        FROM @ds
+        GROUP BY objectId,
+                 eventEnqeuedUtcTime.Date;
+
+
+    OUTPUT @stats
+    TO @outputReport
+    USING Outputters.Csv(outputHeader : true);  
+END
+;

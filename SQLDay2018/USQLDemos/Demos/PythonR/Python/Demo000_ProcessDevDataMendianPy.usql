@@ -1,0 +1,41 @@
+﻿REFERENCE ASSEMBLY [master].[ExtPython];
+
+DECLARE @input string = @"/SQLDay2018/DataSets/DevicesData/{FileName}.csv";
+DECLARE @output string = @"/SQLDay2018/Results/Python_DevProcResults.csv";
+
+@ds =
+    EXTRACT Id int,
+            MesDate DateTime,
+            MesValue int,
+            FileName string
+    FROM @input
+    USING Extractors.Text(delimiter:',',skipFirstNRows:1);
+
+@ds =
+    SELECT Id,
+           Convert.ToInt32(ROW_NUMBER() OVER (ORDER BY Id, MesDate)) AS rn,
+           MesValue AS MesValue,
+           Convert.ToDouble(MesDate.Ticks) AS MesDate,
+           FileName AS FileName
+    FROM @ds;
+
+
+//Python returned dataframe schema (System.Int32, System.Double, System.Double, System.String, System.Double)
+@pyScriptOutput =
+    REDUCE @ds
+    PRESORT MesDate
+    ON FileName, Id
+    PRODUCE Id,rn, SmoothMesValue double
+    USING new Extension.Python.Reducer("Demo000_ProcessDevDataMendianPy1.usql.py");
+
+@pyScriptOutput =
+    SELECT p.Id,
+           new DateTime(Convert.ToInt64(d.MesDate) ) AS MesDate,
+           d.MesValue,
+           p.SmoothMesValue
+    FROM @pyScriptOutput AS p
+    JOIN @ds AS d ON d.rn == p.rn;
+
+OUTPUT @pyScriptOutput
+TO @output
+USING Outputters.Csv(outputHeader : true);

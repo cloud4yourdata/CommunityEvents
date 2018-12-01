@@ -1,0 +1,40 @@
+﻿REFERENCE ASSEMBLY [master].[ExtR];
+
+//Deploy external package
+DEPLOY RESOURCE @"/SQLDay2018/ExtRLibs/signal_0.7-6.zip";
+
+DECLARE @input string = @"/SQLDay2018/DataSets/DevicesData/{FileName}.csv";
+DECLARE @output string = @"/SQLDay2018/Results/R_DevProcResults_RevoScale.csv";
+
+
+@ds =
+    EXTRACT Id int,
+            MesDate DateTime,
+            MesValue int,
+            FileName string
+    FROM @input
+    USING Extractors.Text(delimiter:',',skipFirstNRows:1);
+
+@ds =
+    SELECT Id,
+           MesValue,
+           MesDate.Ticks AS MesDate,
+           FileName AS FileName
+    FROM @ds;
+
+@rScriptOutput =
+    REDUCE @ds
+    PRESORT MesDate
+    ON FileName,Id
+    PRODUCE Id, MesDate double, MesValue, SmoothMesValue double, FileName
+    READONLY FileName 
+USING new Extension.R.Reducer(scriptFile: "Demo001_ProcessDevDataMedianRevoscaleR1.usql.r", rReturnType:"dataframe", stringsAsFactors:false);
+
+
+@rScriptOutput =
+    SELECT Id, new DateTime(Convert.ToInt64(MesDate) ) AS MesDate, MesValue, SmoothMesValue
+    FROM @rScriptOutput;
+
+OUTPUT @rScriptOutput
+TO @output
+USING Outputters.Csv(outputHeader : true);

@@ -1,0 +1,15 @@
+{
+  "name": "ADFRunner",
+  "properties": {
+    "description": "",
+    "type": "AzureBatch",
+    "typeProperties": {
+      "accountName": "adf",
+      "accessKey": "**********",
+      "poolName": "adfRunner",
+      "batchUri": "https://northeurope.batch.azure.com",
+      "linkedServiceName": "DevicesRefs-BS"
+    }
+  },
+  "$schema": "http://datafactories.schema.management.azure.com/schemas/2015-09-01/Microsoft.DataFactory.LinkedService.json"
+}

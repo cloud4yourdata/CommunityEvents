@@ -1,0 +1,2 @@
+﻿USE DCDbHive;
+SELECT COUNT(*) FROM DevicesData

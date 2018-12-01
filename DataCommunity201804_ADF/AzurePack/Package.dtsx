@@ -1,0 +1,651 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="4/11/2018 10:39:17 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="ZION-LAP"
+  DTS:CreatorName="ZION-LAP\tkrawczyk"
+  DTS:DTSID="{6E32051C-F885-4345-8488-8392D7DE551F}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="13.0.4001.0"
+  DTS:LocaleID="1045"
+  DTS:ObjectName="Package"
+  DTS:PackageType="5"
+  DTS:VersionBuild="11"
+  DTS:VersionGUID="{6280F30B-1A7B-4B84-96EF-BDD459B4E11B}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[ADLS Connection Manager]"
+      DTS:CreationName="AzureDataLake"
+      DTS:DTSID="{34FA385D-06BC-4021-B285-3B94E5A0E5D6}"
+      DTS:ObjectName="ADLS Connection Manager">
+      <DTS:ObjectData>
+        <HadoopConnectionManager
+          ConnectionString="WebHdfsHost=adlademosadls.azuredatalakestore.net;WebHdfsPort=443;WebHdfsUserName=282f62a7-f1f8-4ce5-bf4c-2e02d79622ab;WebHdfsAuthType=AzureADServiceIdentity;WebHdfsDomain=925460c6-df85-4de8-ab11-38b0891a7dff;WebHdfsIsHttps=True;">
+          <WebHdfsPassWord
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAoAUfX8w3ZUmRzDdoITzZQAAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAABq0vRwvqhvYlGyTLxGZtqoWdjqBLQ4fi5YdsalpF07WAAAAAAOgAAAAAIAACAAAACOqWXeB5HN6CzlC1JU4NGUo868hJcSKG98KavWx5Xf4GAAAAA2GfvXp/eJQWf4F6jJUSRz6jmnQTK4Wib41yVHdYdisdP34u2rleYz0p5TmWO71quKnTL0AZ4iSysVG7InTEEJRlrdGaAb6Sxid9vbwlb4WRSBNRp83TVBj4BzsqIIiGxAAAAANO/4/QvRSAaeIb1CCH5M/nOhRqqZBoEmVG2JbdhclDDQrj9VGdn9MYLEHpriJPz3iPznQwu3etdDxfkWNQF6gQ</WebHdfsPassWord>
+        </HadoopConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[LocalHost.ADFDemo]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{97962C04-85A2-4248-BF3C-4E3CA26C6FB2}"
+      DTS:ObjectName="LocalHost.ADFDemo">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=.;Initial Catalog=ADFDemo;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Clear Db"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{DCD77BB0-7E63-4FF3-8D08-345C6EE128CB}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Clear Db"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{97962C04-85A2-4248-BF3C-4E3CA26C6FB2}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE  [dbo].[iris_data];" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Copy File to ADLS"
+      DTS:CreationName="AdlsTask"
+      DTS:Description="Azure Data Lake Store File System Task"
+      DTS:DTSID="{A51A19A2-64C1-4F54-AA65-3A178BA68AB4}"
+      DTS:ExecutableType="AdlsTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Copy File to ADLS"
+      DTS:TaskContact="Azure Data Lake Store File System Task; (C) Microsoft Corporation; All Rights Reserved"
+      DTS:ThreadHint="1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <AdlsTask
+          Operation="CopyToADLS"
+          AzureDataLakeConnectionId="{34FA385D-06BC-4021-B285-3B94E5A0E5D6}"
+          AzureDataLakeDirectory="/mySamples/ADF/"
+          LocalDirectory="D:\Repos\Cloud4YourData\ADF\Data"
+          SearchRecursively="False"
+          FileNamePattern="*.csv"
+          FileExpiry="06/30/2018 00:00:00 +02:00" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load Data from ADLS"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{CF29CAC9-2B4B-4A9A-86BF-4263E811B94F}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load Data from ADLS"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Load Data from ADLS\Azure Data Lake Store Source"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="MicrosoftContactInfo"
+              description="Extracts data from a file in ADLS. The supported file formats are: Text, Avro."
+              name="Azure Data Lake Store Source"
+              usesDispositions="true">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="The name of HDFS file"
+                  expressionType="Notify"
+                  name="FilePath">/mySamples/ADF/Iris.csv</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Column names in the first data row"
+                  expressionType="Notify"
+                  name="FirstRowAsColumnNames">false</property>
+                <property
+                  dataType="System.String"
+                  description="The character used to delimit columns in text file"
+                  name="ColumnDelimiter">;</property>
+                <property
+                  dataType="System.Int32"
+                  description="The character used to delimit columns in text file"
+                  name="FileFormat">0</property>
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">AdlsSource</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Connections[Azure Data Lake Connection Manager]"
+                  connectionManagerID="Package.ConnectionManagers[ADLS Connection Manager]"
+                  connectionManagerRefId="Package.ConnectionManagers[ADLS Connection Manager]"
+                  description="It's used to connect Hadoop cluster"
+                  name="Azure Data Lake Connection Manager" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output]"
+                  name="Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Id]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].ExternalColumns[Prop_0]"
+                      length="100"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Id]"
+                      name="Id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Sepal.Length]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].ExternalColumns[Prop_1]"
+                      length="100"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Sepal.Length]"
+                      name="Sepal.Length"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Sepal.Width]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].ExternalColumns[Prop_2]"
+                      length="100"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Sepal.Width]"
+                      name="Sepal.Width"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Petal.Length]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].ExternalColumns[Prop_3]"
+                      length="100"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Petal.Length]"
+                      name="Petal.Length"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Petal.Width]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].ExternalColumns[Prop_4]"
+                      length="100"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Petal.Width]"
+                      name="Petal.Width"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Species]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].ExternalColumns[Prop_5]"
+                      length="100"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Species]"
+                      name="Species"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns>
+                    <externalMetadataColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].ExternalColumns[Prop_0]"
+                      dataType="wstr"
+                      length="100"
+                      name="Prop_0" />
+                    <externalMetadataColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].ExternalColumns[Prop_1]"
+                      dataType="wstr"
+                      length="100"
+                      name="Prop_1" />
+                    <externalMetadataColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].ExternalColumns[Prop_2]"
+                      dataType="wstr"
+                      length="100"
+                      name="Prop_2" />
+                    <externalMetadataColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].ExternalColumns[Prop_3]"
+                      dataType="wstr"
+                      length="100"
+                      name="Prop_3" />
+                    <externalMetadataColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].ExternalColumns[Prop_4]"
+                      dataType="wstr"
+                      length="100"
+                      name="Prop_4" />
+                    <externalMetadataColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].ExternalColumns[Prop_5]"
+                      dataType="wstr"
+                      length="100"
+                      name="Prop_5" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output]"
+                  isErrorOut="true"
+                  name="Error output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[Prop_0]"
+                      dataType="wstr"
+                      length="100"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[Prop_0]"
+                      name="Prop_0" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[Prop_1]"
+                      dataType="wstr"
+                      length="100"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[Prop_1]"
+                      name="Prop_1" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[Prop_2]"
+                      dataType="wstr"
+                      length="100"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[Prop_2]"
+                      name="Prop_2" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[Prop_3]"
+                      dataType="wstr"
+                      length="100"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[Prop_3]"
+                      name="Prop_3" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[Prop_4]"
+                      dataType="wstr"
+                      length="100"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[Prop_4]"
+                      name="Prop_4" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[Prop_5]"
+                      dataType="wstr"
+                      length="100"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Error output].Columns[Prop_5]"
+                      name="Prop_5" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Data from ADLS\Load to Local SQL"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Load to Local SQL"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[iris_data]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1250</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Data from ADLS\Load to Local SQL.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.ADFDemo]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.ADFDemo]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].Columns[Sepal.Length]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="Sepal.Length"
+                      externalMetadataColumnId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].ExternalColumns[Sepal.Length]"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Sepal.Length]" />
+                    <inputColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].Columns[Sepal.Width]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="Sepal.Width"
+                      externalMetadataColumnId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].ExternalColumns[Sepal.Width]"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Sepal.Width]" />
+                    <inputColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].Columns[Petal.Length]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="Petal.Length"
+                      externalMetadataColumnId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].ExternalColumns[Petal.Length]"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Petal.Length]" />
+                    <inputColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].Columns[Petal.Width]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="Petal.Width"
+                      externalMetadataColumnId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].ExternalColumns[Petal.Width]"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Petal.Width]" />
+                    <inputColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].Columns[Species]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="Species"
+                      externalMetadataColumnId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].ExternalColumns[Species]"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Species]" />
+                    <inputColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].Columns[Id]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="Id"
+                      externalMetadataColumnId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].ExternalColumns[Id]"
+                      lineageId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output].Columns[Id]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].ExternalColumns[Id]"
+                      dataType="i4"
+                      name="Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].ExternalColumns[Sepal.Length]"
+                      dataType="r8"
+                      name="Sepal.Length" />
+                    <externalMetadataColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].ExternalColumns[Sepal.Width]"
+                      dataType="r8"
+                      name="Sepal.Width" />
+                    <externalMetadataColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].ExternalColumns[Petal.Length]"
+                      dataType="r8"
+                      name="Petal.Length" />
+                    <externalMetadataColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].ExternalColumns[Petal.Width]"
+                      dataType="r8"
+                      name="Petal.Width" />
+                    <externalMetadataColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input].ExternalColumns[Species]"
+                      dataType="wstr"
+                      length="255"
+                      name="Species" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Data from ADLS\Load to Local SQL.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Data from ADLS\Load to Local SQL.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Data from ADLS\Load to Local SQL.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Data from ADLS\Load to Local SQL.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Load Data from ADLS.Paths[Output]"
+              endId="Package\Load Data from ADLS\Load to Local SQL.Inputs[OLE DB Destination Input]"
+              name="Output"
+              startId="Package\Load Data from ADLS\Azure Data Lake Store Source.Outputs[Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{A421B585-242F-4EE2-95C7-D717ECE4680D}"
+      DTS:From="Package\Copy File to ADLS"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Load Data from ADLS" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{4DC1AB8C-536C-45F3-8AA3-CCEE56B69670}"
+      DTS:From="Package\Clear Db"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Load Data from ADLS" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="162.4,41.6"
+          Id="Package\Copy File to ADLS"
+          TopLeft="87.4285729174711,31.2000004375682" />
+        <NodeLayout
+          Size="180,41.6"
+          Id="Package\Load Data from ADLS"
+          TopLeft="93.7142873102305,140.705884326288" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="168.628572917471,72.8000004375682">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="15.0857143927594,67.9058838887198"
+              Start="0,0"
+              End="15.0857143927594,60.4058838887198">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.9529419443599" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,29.9529419443599"
+                    Point2="0,33.9529419443599"
+                    Point3="4,33.9529419443599" />
+                  <mssgle:LineSegment
+                    End="11.0857143927594,33.9529419443599" />
+                  <mssgle:CubicBezierSegment
+                    Point1="11.0857143927594,33.9529419443599"
+                    Point2="15.0857143927594,33.9529419443599"
+                    Point3="15.0857143927594,37.9529419443599" />
+                  <mssgle:LineSegment
+                    End="15.0857143927594,60.4058838887198" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="118.4,41.6"
+          Id="Package\Clear Db"
+          TopLeft="390.8571495134,48.3294124425076" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="450.0571495134,89.9294124425076">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-237.676195536503,50.7764718837803"
+              Start="0,0"
+              End="-237.676195536503,43.2764718837803">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.1974612524685" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26.1974612524685"
+                    Point2="0,30.1974612524685"
+                    Point3="-4,30.1974612524685" />
+                  <mssgle:LineSegment
+                    End="-233.676195536503,30.1974612524685" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-233.676195536503,30.1974612524685"
+                    Point2="-237.676195536503,30.1974612524685"
+                    Point3="-237.676195536503,34.1974612524685" />
+                  <mssgle:LineSegment
+                    End="-237.676195536503,43.2764718837803" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Load Data from ADLS">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="216,41.6"
+          Id="Package\Load Data from ADLS\Load to Local SQL"
+          TopLeft="162.285717049424,142.541178469674" />
+        <NodeLayout
+          Size="219.2,41.6"
+          Id="Package\Load Data from ADLS\Azure Data Lake Store Source"
+          TopLeft="158.285716981304,50.7764713003561" />
+        <EdgeLayout
+          Id="Package\Load Data from ADLS.Paths[Output]"
+          TopLeft="269.085717015364,92.3764713003561">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,50.1647071693183"
+              Start="0,0"
+              End="0,42.6647071693183">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,42.6647071693183" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Data from ADLS\Azure Data Lake Store Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Data from ADLS\Load to Local SQL">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

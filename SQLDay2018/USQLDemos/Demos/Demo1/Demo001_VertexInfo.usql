@@ -1,0 +1,48 @@
+﻿USE DATABASE SQLDay2018;
+REFERENCE ASSEMBLY ADLAExt;
+USING adlinfo = ADLAExt.Utils.VertextInfo;
+@ds =
+    SELECT adlinfo.GetInfo() AS BasicInfo,
+           adlinfo.GetFullInfo() AS FullInfo,  
+           adlinfo.GetVMInfo()  AS VMInfo,
+           adlinfo.GetDrivesInfo() AS Drives,
+           adlinfo.GetInstalledApps() AS Apps,
+           adlinfo.ListCurrentDir() AS Content
+    FROM(
+        VALUES
+        (
+            "Info"
+        ))
+AS T(Info);
+
+@adluinfo =
+    SELECT FullInfo,BasicInfo
+    FROM @ds;
+
+OUTPUT @adluinfo
+TO "/SQLDay2018/Results/adluinfo.cvs"
+USING Outputters.Csv();
+
+@drivesinfo =
+    SELECT Drives
+    FROM @ds;
+
+OUTPUT @drivesinfo
+TO "/SQLDay2018/Results/adlu_drivesinfo.cvs"
+USING Outputters.Csv();
+
+@apps =
+    SELECT Apps
+    FROM @ds;
+
+OUTPUT @apps
+TO "/SQLDay2018/Results/adlu_apps.cvs"
+USING Outputters.Csv();
+
+@workingDir =
+    SELECT Content
+    FROM @ds;
+
+OUTPUT @workingDir
+TO "/SQLDay2018/Results/adlu_workingDir.cvs"
+USING Outputters.Csv();

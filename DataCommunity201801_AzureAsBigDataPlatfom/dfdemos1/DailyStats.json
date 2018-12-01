@@ -1,0 +1,97 @@
+{
+  "name": "DailyStats",
+  "properties": {
+    "structure": [
+      {
+        "name": "objectId",
+        "type": "Int64"
+      },
+      {
+        "name": "MeasDate",
+        "type": "Datetime"
+      },
+      {
+        "name": "minWaterLevel",
+        "type": "Double"
+      },
+      {
+        "name": "maxWaterLevel",
+        "type": "Double"
+      },
+      {
+        "name": "avgWaterLevel",
+        "type": "Double"
+      },
+      {
+        "name": "minTemperature",
+        "type": "Double"
+      },
+      {
+        "name": "maxTemperature",
+        "type": "Double"
+      },
+      {
+        "name": "avgTemperature",
+        "type": "Double"
+      },
+      {
+        "name": "minHumidity",
+        "type": "Double"
+      },
+      {
+        "name": "maxHumidity",
+        "type": "Double"
+      },
+      {
+        "name": "avgHumidity",
+        "type": "Double"
+      }
+    ],
+    "published": false,
+    "type": "AzureDataLakeStore",
+    "linkedServiceName": "ADLDemoStore",
+    "typeProperties": {
+      "fileName": "{year}-{month}-{day}.csv",
+      "folderPath": "mySamples/DevicesEvents/Results",
+      "format": {
+        "type": "TextFormat",
+        "columnDelimiter": ",",
+        "quoteChar": "\"",
+        "firstRowAsHeader": true
+      },
+      "partitionedBy": [
+        {
+          "name": "year",
+          "value": {
+            "type": "DateTime",
+            "date": "SliceStart",
+            "format": "yyyy"
+          }
+        },
+        {
+          "name": "month",
+          "value": {
+            "type": "DateTime",
+            "date": "SliceStart",
+            "format": "MM"
+          }
+        },
+        {
+          "name": "day",
+          "value": {
+            "type": "DateTime",
+            "date": "SliceStart",
+            "format": "dd"
+          }
+        }
+      ]
+    },
+    "availability": {
+      "frequency": "Day",
+      "interval": 1
+    },
+    "external": false,
+    "policy": {}
+  },
+  "$schema": "http://datafactories.schema.management.azure.com/schemas/2015-09-01/Microsoft.DataFactory.Table.json"
+}

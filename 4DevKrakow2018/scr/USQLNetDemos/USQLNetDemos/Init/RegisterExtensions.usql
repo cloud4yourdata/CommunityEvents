@@ -1,0 +1,7 @@
+﻿//DECLARE @AssemblyPath string = @"D:\Repos\Cloud4YourData\Demos\4DevKrakow2018\scr\USQLNetDemos\ADLAExt\bin\Debug\";
+DECLARE @AssemblyPath string = @"myAssemblies/";
+
+DECLARE @AssemblyExt string = @AssemblyPath+"ADLAExt.dll";
+USE [4Developers];
+DROP ASSEMBLY IF EXISTS ADLAExt;
+CREATE ASSEMBLY ADLAExt FROM @AssemblyExt;

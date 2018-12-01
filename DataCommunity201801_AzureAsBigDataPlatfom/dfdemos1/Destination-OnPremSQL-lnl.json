@@ -1,0 +1,11 @@
+{
+  "name": "Destination-OnPremSQL-lnl",
+  "properties": {
+    "type": "OnPremisesSqlServer",
+    "typeProperties": {
+      "connectionString": "Data Source=.;Initial Catalog='WaterDb';encryptedCredential=eyJDbGFzc1R5cGUiOiJNaWNyb3NvZnQuRGF0YVByb3h5LkNvcmUuSW50ZXJTZXJ2aWNlRGF0YUNvbnRyYWN0LkNyZWRlbnRpYWxTVTA2Q1kxNCIsIkNyZWRlbnRpYWxJZCI6ImNlN2E2OWY0LTQzYjQtNDBiNC04OTYyLTM3YzA2MGUwN2U3OCIsIkRhdGFTb3VyY2VSZWZlcmVuY2VBbmRTaWduYXR1cmUiOm51bGwsIkRhdGFTb3VyY2VTZXR0aW5ncyI6bnVsbCwiRW5jcnlwdGVkQmxvYiI6bnVsbCwiVmVyc2lvbiI6IjEuMCJ9;",
+      "gatewayName": "IntegrationRuntime-Lap"
+    }
+  },
+  "$schema": "http://datafactories.schema.management.azure.com/schemas/2015-09-01/Microsoft.DataFactory.LinkedService.json"
+}

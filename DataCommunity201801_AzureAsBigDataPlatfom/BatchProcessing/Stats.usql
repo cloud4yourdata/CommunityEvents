@@ -1,0 +1,38 @@
+﻿//DECLARE @inputData string = @"d:\Repos\Cloud4YourData\Demos\AzureAsBigDataPlatfom\Data\{date}.csv";
+
+DECLARE @processDate DateTime = DateTime.Parse("2017-11-18"); //DateTime.UtcNow.AddDays( - 1);
+DECLARE @processFolderName string = @processDate.ToString("yyyy-MM-dd");
+DECLARE @inputData string = @"/mySamples/DevicesEvents/"+@processFolderName+"/{filename}.csv";
+DECLARE @outputReport string = @"/mySamples/DevicesEvents/Results/" + @processFolderName + ".csv";
+
+@ds =
+    EXTRACT objectId int,
+            timestamp DateTime,
+            waterLevel int,
+            temperature int,
+            humidity int,
+            eventProcessedUtcTime DateTime,
+            partitionId int,
+            eventEnqeuedUtcTime DateTime,
+            filename string
+    FROM @inputData
+    USING Extractors.Csv(skipFirstNRows : 1);
+
+@stats =
+    SELECT objectId,
+           MIN(waterLevel) AS minWaterLevel,
+           MAX(waterLevel) AS maxWaterLevel,
+           AVG(waterLevel) AS avgWaterLevel,
+           MIN(temperature) AS minTemperature,
+           MAX(temperature) AS maxTemperature,
+           AVG(temperature) AS avgTemperature,
+           MIN(humidity) AS minHumidity,
+           MAX(humidity) AS maxHumidity,
+           AVG(humidity) AS avgHumidity
+    FROM @ds
+    GROUP BY objectId,eventEnqeuedUtcTime.Date;
+
+
+OUTPUT @stats
+TO @outputReport
+USING Outputters.Csv(outputHeader : true);

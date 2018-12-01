@@ -1,0 +1,44 @@
+﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>4ed0043f-cd42-40a1-8fba-2c15c7330dce</ProjectGuid>
+    <OutputType>File</OutputType>
+    <AssemblyName>Hive</AssemblyName>
+    <StartFile>Script.hql</StartFile>
+    <Name>DCHiveLLAP</Name>
+    <RootNamespace>DCHiveLLAP</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Script Include="000-CreateDatabase.hql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="001-CreateExternalTables.hql">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="002-SampleQueries.hql">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="003-CreateManagedTable.hql">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="004-SampleQueries.hql">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="005-SampleDetailedQueries.hql">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="006-Query.hql">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(AppData)\Microsoft\DataLake\MsBuild\1.0\Hive.targets" />
+</Project>

@@ -1,0 +1,14 @@
+{
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "myEventHubMessage",
+      "direction": "in",
+      "path": "wateralertsmax",
+      "connection": "bdpmydevlabs_RootManageSharedAccessKey_EVENTHUB",
+      "consumerGroup": "$Default",
+      "cardinality": "many"
+    }
+  ],
+  "disabled": false
+}
