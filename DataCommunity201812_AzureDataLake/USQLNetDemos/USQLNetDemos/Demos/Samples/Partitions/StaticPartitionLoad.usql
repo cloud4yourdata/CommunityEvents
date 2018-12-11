@@ -1,0 +1,31 @@
+﻿IMPORT PACKAGE DemoDb.dm.MyPartitionsDemo AS mypart;
+
+//Add 2 partition
+ALTER TABLE DemoDb.dm.Orders
+ADD IF NOT EXISTS PARTITION(mypart.@partition1),
+                  PARTITION(mypart.@partition2),
+                  PARTITION(mypart.@partition3);
+
+// Insert a few records
+INSERT INTO DemoDb.dm.Orders
+(OrderId, OrderValue)
+PARTITION(mypart.@partition1)
+VALUES
+(1,100.1),
+(2,200.1);
+
+INSERT INTO DemoDb.dm.Orders
+(OrderId, OrderValue)
+PARTITION(mypart.@partition2)
+VALUES
+(3,300.2),
+(4,400.2);
+
+INSERT INTO DemoDb.dm.Orders
+(OrderId, OrderValue)
+PARTITION(mypart.@partition3)
+VALUES
+(5,500.3),
+(6,600.3);
+
+                                                    

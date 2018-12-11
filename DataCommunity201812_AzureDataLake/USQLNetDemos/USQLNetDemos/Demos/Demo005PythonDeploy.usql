@@ -1,0 +1,23 @@
+﻿REFERENCE ASSEMBLY [master].[ExtPython];
+
+DEPLOY RESOURCE @"/Demos/DC/HP/housePricesModel.pkl";
+DEPLOY RESOURCE @"/Demos/DC/HP/housePricesHeader.csv";               
+DEPLOY RESOURCE @"/Demos/DC/HP/ApplyModel.py";  
+
+DECLARE @inputFile string = @"/Demos/DC/HP/housePricesToPredict.csv";
+DECLARE @outputFile string = @"/Demos/DC/HP/Results/Python_HousePrices.csv";
+
+
+@ds =
+    EXTRACT Content string
+    FROM @inputFile
+    USING Extractors.Text(skipFirstNRows:1, delimiter:'\r',silent:true);
+
+@pyScriptOutput =
+    REDUCE @ds ALL
+    PRODUCE Id double, SalePrice int
+    USING new Extension.Python.Reducer("ApplyModel.py");
+
+OUTPUT @pyScriptOutput
+TO @outputFile
+USING Outputters.Csv(outputHeader : true);

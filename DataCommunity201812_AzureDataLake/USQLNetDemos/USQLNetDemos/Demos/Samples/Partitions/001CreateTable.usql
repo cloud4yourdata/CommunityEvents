@@ -1,0 +1,25 @@
+﻿USE DataCommunity;
+CREATE TABLE  IF NOT EXISTS dbo.Orders
+(
+    OrderId int,
+    OrderValue double,
+    OrderDate DateTime,
+    INDEX clx_OrderId
+    CLUSTERED(OrderId)
+    PARTITIONED BY (OrderDate)
+    DISTRIBUTED BY
+    HASH(OrderId)
+    INTO 8
+);
+
+CREATE TABLE IF NOT EXISTS dbo.OrdersFailed
+(
+    OrderId int,
+    OrderValue double,
+    OrderDate DateTime,
+    INDEX clx_OrderId
+    CLUSTERED(OrderId)
+    DISTRIBUTED BY
+    HASH(OrderId)
+    INTO 2
+);

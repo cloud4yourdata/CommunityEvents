@@ -1,0 +1,10 @@
+﻿@orders =
+    SELECT OrderId,
+           OrderDate,
+           OrderValue
+    FROM DemoDb.dm.Orders;
+
+OUTPUT @orders
+TO "orders.csv"
+ORDER BY OrderId
+USING Outputters.Csv();

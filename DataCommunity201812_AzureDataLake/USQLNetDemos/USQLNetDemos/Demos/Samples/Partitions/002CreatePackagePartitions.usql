@@ -1,0 +1,9 @@
+﻿DROP PACKAGE IF EXISTS DataCommunity.dbo.MyPartitionsDemo;
+CREATE PACKAGE DataCommunity.dbo.MyPartitionsDemo()
+BEGIN
+EXPORT @partition1 DateTime = new DateTime(2017, 01, 01, 00, 00, 00, 00, DateTimeKind.Utc);
+EXPORT @partition2 DateTime = @partition1.AddDays(1);
+EXPORT @partition3 DateTime = @partition2.AddDays(1);
+EXPORT @errorpartition DateTime = new DateTime(1999, 01, 01, 00, 00, 00, 00, DateTimeKind.Utc);
+
+END;

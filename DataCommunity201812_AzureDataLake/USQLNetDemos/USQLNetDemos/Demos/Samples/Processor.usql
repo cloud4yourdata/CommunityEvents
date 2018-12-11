@@ -1,0 +1,31 @@
+﻿USE DATABASE [DataCommunity];
+REFERENCE ASSEMBLY [ADLAExt];
+
+USING NameReverseProcessor = ADLAExt.Processors.NameReverseProcessor;
+
+@sample =
+    SELECT *
+    FROM(
+        VALUES
+        (
+            "ABC"
+        ),
+        (
+            "DEF"
+        ),
+        (
+            "GHI"
+        )
+         ) AS T(name);
+
+@reversed =
+    PROCESS @sample
+    PRODUCE name,
+            reversed string
+    READONLY name
+    REQUIRED name
+    USING new NameReverseProcessor();
+
+OUTPUT @reversed
+TO "reversed.csv"
+USING Outputters.Csv();

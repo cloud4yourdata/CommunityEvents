@@ -1,0 +1,50 @@
+﻿USE [DataCommunity];
+
+DECLARE @baseOutput string = @"d:\Repos\Cloud4YourData\CommunityEvents\DataCommunity201812_AzureDataLake\output\";
+(@crimes, @crimesTypes) = dbo.tvf_GetCrimes("*");
+
+@crimesStats =
+    SELECT City,
+           CrimeType,
+           COUNT( * ) AS TotalCrimes
+    FROM @crimes
+    GROUP BY City,
+             CrimeType;
+
+(@crimesLondon, @crimesTypesLondon) = dbo.tvf_GetCrimes("London");
+
+
+@crimesStatsLondon =
+    SELECT City,
+           CrimeType,
+           COUNT( * ) AS TotalCrimes
+    FROM @crimesLondon
+    GROUP BY City,
+             CrimeType;
+
+OUTPUT @crimesTypes
+TO @baseOutput+"crimesTypes.csv"
+ORDER BY CrimeType
+USING Outputters.Csv(outputHeader:true);
+
+OUTPUT @crimesStats
+TO @baseOutput+"CitiesCrimes.csv"
+ORDER BY CrimeType,
+         City,
+         TotalCrimes DESC
+USING Outputters.Csv(outputHeader:true);
+
+
+OUTPUT @crimesStatsLondon
+TO @baseOutput+"LondonCrimes.csv"
+ORDER BY CrimeType,
+         City,
+         TotalCrimes DESC
+USING Outputters.Csv(outputHeader:true);
+
+
+//Dead code
+OUTPUT @crimesTypesLondon
+TO @baseOutput+"LondonCrimesTypes.csv"
+ORDER BY CrimeType
+USING Outputters.Csv(outputHeader:true);

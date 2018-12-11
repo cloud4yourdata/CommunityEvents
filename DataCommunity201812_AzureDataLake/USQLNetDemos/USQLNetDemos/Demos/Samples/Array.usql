@@ -1,0 +1,23 @@
+﻿DECLARE @project string = "Project1|Project2|Project3|Project4";
+@sample =
+    SELECT *
+    FROM(
+        VALUES
+        (
+            @project
+        )
+        ) AS P(name);
+
+@projs =
+    SELECT new SQL.ARRAY<string>(name.Split(new char[]{'|'}, StringSplitOptions.RemoveEmptyEntries)) AS names
+    FROM @sample;
+
+@projs =
+    SELECT P.name AS projectName
+    FROM @projs
+         CROSS APPLY
+             EXPLODE(names) AS P(name); 
+
+OUTPUT @projs
+TO "projs.csv"
+USING Outputters.Csv();

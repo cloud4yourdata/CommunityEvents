@@ -1,0 +1,3 @@
+﻿IMPORT PACKAGE DataCommunity.dbo.MyPartitionsDemo AS mypart;
+ALTER TABLE DataCommunity.dbo.Orders
+DROP IF EXISTS PARTITION(mypart.@partition1);

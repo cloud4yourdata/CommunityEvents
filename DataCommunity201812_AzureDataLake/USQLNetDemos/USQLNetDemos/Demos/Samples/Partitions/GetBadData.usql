@@ -1,0 +1,12 @@
+﻿IMPORT PACKAGE DemoDb.dm.MyPartitionsDemo AS mypart;
+@orders =
+    SELECT OrderId,
+           OrderDate,
+           OrderValue
+    FROM DemoDb.dm.Orders
+    WHERE OrderDate == mypart.@errorpartition;
+
+OUTPUT @orders
+TO "bad_orders.csv"
+ORDER BY OrderId
+USING Outputters.Csv();

@@ -1,0 +1,22 @@
+﻿IMPORT PACKAGE DataCommunity.dbo.MyPartitionsDemo AS mypart;
+
+ALTER TABLE DataCommunity.dbo.Orders
+ADD IF NOT EXISTS PARTITION(mypart.@partition2),
+                  PARTITION(mypart.@partition3),
+                  PARTITION(mypart.@errorpartition);  
+
+ALTER TABLE DataCommunity.dbo.Orders
+DROP IF EXISTS PARTITION(mypart.@partition1);
+
+INSERT INTO DataCommunity.dbo.Orders
+(OrderId,OrderDate, OrderValue)
+   //ON INTEGRITY VIOLATION IGNORE
+   //ON INTEGRITY VIOLATION ERROR
+   ON INTEGRITY VIOLATION MOVE TO PARTITION(mypart.@errorpartition)
+VALUES
+(100,mypart.@partition1, 100.1),
+(200,mypart.@partition1,200.1),
+(300,mypart.@partition2,300.2),
+(400,mypart.@partition2,400.2),
+(500,mypart.@partition3,500.3),
+(600,mypart.@partition3,600.3);

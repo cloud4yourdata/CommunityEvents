@@ -1,0 +1,67 @@
+﻿//Database
+USE DATABASE [DataCommunity];
+//Registered Assembly 
+REFERENCE ASSEMBLY [ADLAExt];
+//Alias
+USING IpConverter = ADLAExt.Utils.IpConverter;
+//Input Path for our dataset
+DECLARE @logsLocation string = @"D:\AppData\BIGDATA\IISLogs\{filename}.{ext}";
+//Apply schema on read
+@iisLogs = EXTRACT
+        filename string, //Fileset
+        ext string, //Fileset
+        date DateTime,
+        time string,
+        s_ip string,
+        cs_method string,
+        cs_uristem string,
+        cs_uriquery string,
+        s_port int,
+        cs_username string,
+        c_ip string,
+        cs_useragent string,
+        cs_referer string,
+        sc_status int,
+        sc_substatus int,
+        sc_win32status int,
+        s_timetaken int
+    FROM @logsLocation
+    USING Extractors.Text(delimiter:' ',silent:true); //Extractor silent -ignore errors
+
+//rowset
+@ds =
+    SELECT IpConverter.ToIp4Format(c_ip) AS Ip,
+           date.Date AS Date
+    FROM @iisLogs
+    WHERE ext IN("log"); //push-down predicate
+
+//stats by IP -sql
+@dsIps =
+    SELECT Date,
+           Ip,
+           COUNT( * ) AS ReqCount
+    FROM @ds
+    WHERE Ip != "0.0.0.1"
+    GROUP BY Ip,
+             Date;
+
+//stats by DayOfWeek
+@dsDays =
+    SELECT Date.DayOfWeek.ToString() AS DayOfWeek,
+           COUNT( * ) AS ReqCount
+    FROM @ds
+    GROUP BY Date.DayOfWeek.ToString();
+
+//Save output
+OUTPUT @dsIps
+TO @"d:\Repos\Cloud4YourData\CommunityEvents\DataCommunity201812_AzureDataLake\output\iisStats.log"
+ORDER BY Date DESC,
+         ReqCount DESC
+USING Outputters.Csv(outputHeader:true);
+
+
+OUTPUT @dsDays
+TO @"d:\Repos\Cloud4YourData\CommunityEvents\DataCommunity201812_AzureDataLake\output\iisStatsDayOfWeek.log"
+ORDER BY DayOfWeek DESC,
+         ReqCount DESC
+USING Outputters.Csv(outputHeader:true);

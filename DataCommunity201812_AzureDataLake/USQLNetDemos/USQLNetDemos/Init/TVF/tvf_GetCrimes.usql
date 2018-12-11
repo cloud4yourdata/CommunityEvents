@@ -1,0 +1,37 @@
+﻿USE [DataCommunity];
+DROP FUNCTION IF EXISTS dbo.tvf_GetCrimes;
+CREATE FUNCTION dbo.tvf_GetCrimes(@City string = "London")
+RETURNS (@crimes, @crimesTypes)
+AS
+BEGIN
+    DECLARE @inputCrimes = @"d:\AppData\BIGDATA\UKCrimes\{Date:yyyy}-{Date:MM}\{Input}-{City}-street.csv";
+    @crimes =
+        EXTRACT CrimeID string,
+                Month string,
+                ReportedBy string,
+                FallsWithin string,
+                Longitude string,
+                Latitude string,
+                Location string,
+                LSOACode string,
+                LSOAName string,
+                CrimeType string,
+                LastOutcomeCategory string,
+                Context string,
+                Date DateTime,
+                Input string,
+                City string
+        FROM @inputCrimes
+        USING Extractors.Csv(silent : false, skipFirstNRows : 1);
+
+IF @City !="*" THEN
+    @crimes =
+        SELECT *
+        FROM @crimes
+        WHERE City.ToUpper().StartsWith(@City.ToUpper());
+    END;
+
+    @crimesTypes =
+        SELECT DISTINCT CrimeType
+        FROM @crimes;
+END;

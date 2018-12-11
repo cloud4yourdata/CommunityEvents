@@ -1,0 +1,64 @@
+﻿USE DATABASE [DataCommunity];
+REFERENCE ASSEMBLY ADLAExt;
+USING adlinfo = ADLAExt.Utils.VertextInfo;
+DECLARE @expiry = new TimeSpan(0,5,0);
+
+@ds =
+    SELECT adlinfo.GetInfo() AS BasicInfo,
+           adlinfo.GetFullInfo() AS FullInfo,  
+           adlinfo.GetVMInfo()  AS VMInfo,
+           adlinfo.GetDrivesInfo() AS Drives,
+           adlinfo.GetInstalledApps() AS Apps,
+           adlinfo.ListCurrentDir() AS Content,
+           adlinfo.ListDrivesFiles("D:\\data") AS DDrive
+    FROM(
+        VALUES
+        (
+            "Info"
+        ))
+AS T(Info);
+
+@adluinfo =
+    SELECT FullInfo,BasicInfo
+    FROM @ds;
+
+OUTPUT @adluinfo
+TO "/Demos/DC/ADLU/adluinfo.cvs"
+EXPIRATION @expiry
+USING Outputters.Csv();
+
+@drivesinfo =
+    SELECT Drives
+    FROM @ds;
+
+OUTPUT @drivesinfo
+TO "/Demos/DC/ADLU/adlu_drivesinfo.cvs"
+EXPIRATION @expiry
+USING Outputters.Csv();
+
+@apps =
+    SELECT Apps
+    FROM @ds;
+
+OUTPUT @apps
+TO "/Demos/DC/ADLU/adlu_apps.cvs"
+EXPIRATION @expiry
+USING Outputters.Csv();
+
+@workingDir =
+    SELECT Content
+    FROM @ds;
+
+OUTPUT @workingDir
+TO "/Demos/DC/ADLU/adlu_workingDir.cvs"
+EXPIRATION @expiry
+USING Outputters.Csv();
+
+@ddrive =
+    SELECT DDrive
+    FROM @ds;
+
+OUTPUT @ddrive
+TO "/Demos/DC/ADLU/adlu_dDrive.cvs"
+EXPIRATION @expiry
+USING Outputters.Csv();

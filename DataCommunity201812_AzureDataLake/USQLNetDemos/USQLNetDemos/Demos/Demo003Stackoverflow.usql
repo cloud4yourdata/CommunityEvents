@@ -1,0 +1,119 @@
+﻿USE DATABASE [DataCommunity];
+REFERENCE SYSTEM ASSEMBLY [System.Xml];
+REFERENCE ASSEMBLY ADLAExt;
+USING XmlXPathProcessor = ADLAExt.Processors.XmlXPathProcessor;
+USING StackOverflowCategoryProducer = ADLAExt.Processors.StackOverflowCategoryProducer;
+DECLARE @inputFile string = @"mySamples/StackOverflow/Posts.xml";
+//DECLARE @inputFile string = @"D:\AppData\BIGDATA\StackOverFlow\programmers\Posts.xml";
+
+//Load input file
+@ds =
+    EXTRACT content string
+    FROM @inputFile
+    USING Extractors.Text(delimiter:'\r',silent:true);
+
+//extract item from line 
+//<row Id="1" PostTypeId="1" AcceptedAnswerId="13" CreationDate="2010-09-01T19:34:48.000" Score="100" ViewCount="27044" Body="&lt;p&gt;A coworker of mine believes that &lt;em&gt;any&lt;/em&gt; use of in-code comments (ie, not javadoc style method or class comments) is a &lt;a href=&quot;http://en.wikipedia.org/wiki/Code_smell&quot;&gt;code smell&lt;/a&gt;.  What do you think?&lt;/p&gt;&#xA;" OwnerUserId="6" LastEditorUserId="226" LastEditDate="2011-11-25T22:32:41.300" LastActivityDate="2012-11-27T19:29:27.740" Title="&quot;Comments are a code smell&quot;" Tags="&lt;comments&gt;&lt;anti-patterns&gt;" AnswerCount="34" CommentCount="10" FavoriteCount="49" ClosedDate="2012-11-27T20:11:51.580" CommunityOwnedDate="2011-01-31T09:04:54.130" />
+ 
+@ds =
+    PROCESS @ds
+    PRODUCE content ,
+            Tags string,
+            Id string,
+            ViewCount string,
+            CreationDate string,
+            Title string,
+            AnswerCount string,
+            OwnerUserId string
+            READONLY content
+    USING new XmlXPathProcessor( xPathQuery : "/row", columnPaths : new SQL.MAP<string, string>
+              {
+              {"Id", "Id"},
+              {"CreationDate", "CreationDate"},
+              {"ViewCount", "ViewCount"},
+              {"Tags", "Tags"},
+              {"Title", "Title"},
+              {"AnswerCount", "AnswerCount"},
+              {"OwnerUserId", "OwnerUserId"},
+              }
+              );
+//Filter items Id!=empty
+@ds =
+    SELECT Tags,
+           Id,
+           ViewCount,
+           CreationDate,
+           Title,
+           AnswerCount,
+           OwnerUserId
+    FROM @ds
+    WHERE Id != string.Empty;
+
+//Convert types 
+//Extract tags Tags="<comments><anti-patterns>"
+@postTags =
+    SELECT Int32.Parse(p.Id) AS Id,
+           string.IsNullOrEmpty(p.ViewCount) ? 0 : Int32.Parse(p.ViewCount) AS ViewCount,
+           DateTime.Parse(p.CreationDate) AS CreationDate,
+           Title,
+           string.IsNullOrEmpty(OwnerUserId) ? 0 : Int32.Parse(OwnerUserId) AS UserId,
+           string.IsNullOrEmpty(p.AnswerCount) ? 0 : Int32.Parse(p.AnswerCount) AS AnswerCount,
+           new SQL.ARRAY<string>(p.Tags.Split('>').Select(t => t.Replace("<", ""))) AS tags
+    FROM @ds AS p;
+
+//Explode tags 
+//Eech row -one tags
+@postWithSimpleTags =
+    SELECT pt.Id,
+           pt.ViewCount,
+           Tag,
+           CreationDate.Year AS Year,
+           CreationDate.Month AS Month,
+           CreationDate,
+           Title,
+           UserId,
+           AnswerCount,
+           "category" AS Category
+    FROM @postTags AS pt
+         CROSS APPLY
+             EXPLODE(tags) AS posttags(Tag);
+
+//Merge category 
+@postsByCategory =
+    PROCESS @postWithSimpleTags
+    PRODUCE Tag,
+            Category,
+            Id,
+            ViewCount,
+            Year,
+            Month,
+            CreationDate,
+            Title,
+            UserId,
+            AnswerCount
+    READONLY Id,
+             ViewCount,
+             Year,
+             Month,
+             CreationDate,
+             Title,
+             UserId,
+             AnswerCount
+    USING new StackOverflowCategoryProducer();
+
+//Compute Statistics
+@results =
+    SELECT Category,
+           Year,
+           Month,
+           SUM(ViewCount) AS ViewCount
+    FROM @postsByCategory
+    WHERE Category != "other"
+    GROUP BY Category,
+             Year,
+             Month;
+
+OUTPUT @results
+TO "/Demos/DC/StackOverflowTechRadar.cvs"
+ORDER BY Year DESC,Month DESC,ViewCount DESC
+USING Outputters.Csv(quoting : true);
