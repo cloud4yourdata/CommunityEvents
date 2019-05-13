@@ -1,0 +1,32 @@
+﻿DECLARE @inputPath string = @"/SQLDay2019/Data/{*}.csv";
+DECLARE @outputPath string = @"/SQLDay2019/Out/Results/USQLFilter_"+DateTime.Now.ToString("yyyyMMddHHmmss")+".csv";
+
+@inputData =
+    EXTRACT CrimeID string,
+            DateReported DateTime,
+            MonthReported int,
+            YearReported int,
+            ShortReportedByPoliceForceName string,
+            ReportedByPoliceForceName string,
+            FallsWithinPoliceForceName string,
+            Longitude float?,
+            Latitude float?,
+            Location string,
+            DistrictCode string,
+            DistrictName string,
+            CrimeType string,
+            Outcome string
+    FROM @inputPath
+    USING Extractors.Csv(skipFirstNRows:1, quoting:true);
+
+@outputData =
+    SELECT 
+           DateReported,
+           DistrictCode,
+           CrimeType
+    FROM @inputData
+    WHERE YearReported == 2017 AND MonthReported == 10;
+
+OUTPUT @outputData
+    TO @outputPath
+    USING Outputters.Csv();

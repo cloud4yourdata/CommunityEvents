@@ -1,0 +1,32 @@
+﻿USE SQLDay2019;
+@partitions =
+    SELECT o.name AS tableName,
+            c.name AS columnName,
+            prv.*
+    FROM usql.partitions AS p
+    JOIN usql.objects AS o
+    ON p.object_id_guid == o.object_id_guid
+    JOIN usql.partition_parameters AS pp
+    ON p.object_id_guid == pp.object_id_guid
+    JOIN usql.columns AS c
+    ON o.object_id_guid == c.object_id_guid
+    AND pp.column_id == c.column_id
+    JOIN usql.partition_range_values AS prv
+    ON p.partition_id_guid == prv.partition_id_guid;
+
+
+OUTPUT @partitions
+TO @"/SQLDay2019/Out/Results/partiotionInfo.txt"
+USING Outputters.Tsv(outputHeader:true);   
+
+
+@distributions =
+    SELECT o.name AS objectName,
+            d.*
+    FROM usql.distributions AS d
+    JOIN usql.objects AS o
+    ON d.object_id_guid == o.object_id_guid;
+
+OUTPUT @distributions
+TO @"/SQLDay2019/Out/Results/distributions_objects.txt"
+USING Outputters.Tsv(outputHeader:true);  

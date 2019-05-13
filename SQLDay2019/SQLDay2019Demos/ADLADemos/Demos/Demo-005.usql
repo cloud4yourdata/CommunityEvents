@@ -1,0 +1,14 @@
+﻿USE SQLDay2019;
+DECLARE @outputPath string = @"/SQLDay2019/Out/Results/Partition00_"+DateTime.Now.ToString("yyyyMMddHHmmss")+".csv";;
+
+@outputData =
+    SELECT 
+           DateReported,
+           DistrictCode,
+           CrimeType
+    FROM StreetCrimesDistByCrimeType
+    WHERE YearReported == 0 AND MonthReported == 0;
+
+OUTPUT @outputData
+    TO @outputPath
+    USING Outputters.Csv();

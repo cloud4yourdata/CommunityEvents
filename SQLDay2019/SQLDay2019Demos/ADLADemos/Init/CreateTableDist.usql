@@ -1,0 +1,28 @@
+﻿USE SQLDay2019;
+
+DROP TABLE IF EXISTS StreetCrimesDistByCrimeType;
+USE SQLDay2019;
+DROP TABLE IF EXISTS StreetCrimesDistByCrimeType;
+CREATE TABLE IF NOT EXISTS StreetCrimesDistByCrimeType
+(
+    CrimeID string,
+    DateReported DateTime,
+    MonthReported int,
+    YearReported int,
+    ShortReportedByPoliceForceName string,
+    ReportedByPoliceForceName string,
+    FallsWithinPoliceForceName string,
+    Longitude float?,
+    Latitude float?,
+    Location string,
+    DistrictCode string,
+    DistrictName string,
+    CrimeType string,
+    Outcome string,
+    INDEX idx_StreetCrimesDistByCrimeType
+    CLUSTERED(CrimeType)
+    PARTITIONED BY (YearReported,MonthReported)
+    DISTRIBUTED BY
+    HASH(CrimeType)
+    INTO 4
+);

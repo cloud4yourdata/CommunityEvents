@@ -1,0 +1,38 @@
+﻿SET @@FeaturePreviews = "DataPartitionedOutput:on";
+DECLARE @inputPath string = @"/SQLDay2019/Data/{*}.csv";
+DECLARE @outputPath string = @"/SQLDay2019/Out/CrimesDetails/CrimesDetails_{MonthReported}.csv";
+
+@inputData =
+    EXTRACT CrimeID string,
+            DateReported DateTime,
+            MonthReported int,
+            YearReported int,
+            ShortReportedByPoliceForceName string,
+            ReportedByPoliceForceName string,
+            FallsWithinPoliceForceName string,
+            Longitude float?,
+            Latitude float?,
+            Location string,
+            DistrictCode string,
+            DistrictName string,
+            CrimeType string,
+            Outcome string
+    FROM @inputPath
+    USING Extractors.Csv(skipFirstNRows:1, quoting:true);
+
+@rs =
+    SELECT  CrimeID,
+            DateReported,
+            YearReported,
+            ShortReportedByPoliceForceName,
+            ReportedByPoliceForceName,
+            FallsWithinPoliceForceName,
+            Outcome,
+            MonthReported
+    FROM @inputData
+    WHERE !string.IsNullOrEmpty(CrimeID);
+
+
+OUTPUT @rs
+    TO @outputPath
+    USING Outputters.Csv();

@@ -1,0 +1,106 @@
+﻿USE SQLDay2019;
+DECLARE @inputPath string = @"/SQLDay2019/Data/{*}.csv";
+
+ALTER TABLE StreetCrimesDistByCrimeType
+ADD IF NOT EXISTS PARTITION(0,0),
+                  PARTITION(2017,10),
+                  PARTITION(2017,11),
+                  PARTITION(2017,12),
+                  PARTITION(2018,1);
+
+@inputData =
+    EXTRACT CrimeID string,
+            DateReported DateTime,
+            MonthReported int,
+            YearReported int,
+            ShortReportedByPoliceForceName string,
+            ReportedByPoliceForceName string,
+            FallsWithinPoliceForceName string,
+            Longitude float?,
+            Latitude float?,
+            Location string,
+            DistrictCode string,
+            DistrictName string,
+            CrimeType string,
+            Outcome string
+    FROM @inputPath
+    USING Extractors.Csv(skipFirstNRows:1, quoting:true);
+
+//Static Paritioning
+INSERT INTO StreetCrimesDistByCrimeType
+(
+    CrimeID,
+    DateReported,
+    ShortReportedByPoliceForceName,
+    ReportedByPoliceForceName,
+    FallsWithinPoliceForceName,
+    Longitude,
+    Latitude,
+    Location,
+    DistrictCode,
+    DistrictName,
+    CrimeType,
+    Outcome
+)
+PARTITION
+(
+    2018,
+    1
+)
+SELECT CrimeID,
+       DateReported,
+       ShortReportedByPoliceForceName,
+       ReportedByPoliceForceName,
+       FallsWithinPoliceForceName,
+       Longitude,
+       Latitude,
+       Location,
+       DistrictCode,
+       DistrictName,
+       CrimeType,
+       Outcome
+FROM @inputData
+WHERE MonthReported == 1 AND YearReported == 2018;
+
+//Dynamic Partitionig
+INSERT INTO StreetCrimesDistByCrimeType
+(
+    CrimeID,
+    DateReported,
+    MonthReported,
+    YearReported,
+    ShortReportedByPoliceForceName,
+    ReportedByPoliceForceName,
+    FallsWithinPoliceForceName,
+    Longitude,
+    Latitude,
+    Location,
+    DistrictCode,
+    DistrictName,
+    CrimeType,
+    Outcome
+)
+//ON INTEGRITY VIOLATION IGNORE
+//ON INTEGRITY VIOLATION ERROR
+ON INTEGRITY VIOLATION MOVE TO PARTITION
+                       (
+                           0,
+                           0
+                       )
+SELECT CrimeID,
+       DateReported,
+       MonthReported,
+       YearReported,
+       ShortReportedByPoliceForceName,
+       ReportedByPoliceForceName,
+       FallsWithinPoliceForceName,
+       Longitude,
+       Latitude,
+       Location,
+       DistrictCode,
+       DistrictName,
+       CrimeType,
+       Outcome
+FROM @inputData
+WHERE
+MonthReported >= 9 AND YearReported == 2017;

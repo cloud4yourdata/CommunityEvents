@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>4bd7eb74-f468-4cfc-96ff-87c7040bab3c</ProjectGuid>
+    <OutputType>File</OutputType>
+    <AssemblyName>ADLADemos.usqlpack</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <USQLProjectVersion>2</USQLProjectVersion>
+    <Name>ADLADemos</Name>
+    <RootNamespace>ADLADemos</RootNamespace>
+    <RuntimeVersion>default</RuntimeVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Script Include="Demos\Demo-001.usql" />
+    <Script Include="Demos\Demo-002.usql" />
+    <Script Include="Demos\Demo-003.usql" />
+    <Script Include="Demos\Demo-004.usql" />
+    <Script Include="Demos\Demo-005.usql" />
+    <Script Include="Init\CreateDatabase.usql" />
+    <Script Include="Init\CreateTableDist.usql" />
+    <Script Include="Init\LoadDataIntoStreetCrimesDistByCrimeType.usql" />
+    <Script Include="Init\PartitionInfo.usql" />
+    <Script Include="Utils\SplitData_CrimesDetails.usql" />
+    <Script Include="Utils\SplitData_CrimesLocations.usql" />
+    <ScriptCode Include="Demos\Demo-001.usql.cs">
+      <DependentUpon>Demos\Demo-001.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo-002.usql.cs">
+      <DependentUpon>Demos\Demo-002.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo-003.usql.cs">
+      <DependentUpon>Demos\Demo-003.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo-004.usql.cs">
+      <DependentUpon>Demos\Demo-004.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Demos\Demo-005.usql.cs">
+      <DependentUpon>Demos\Demo-005.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Init\CreateDatabase.usql.cs">
+      <DependentUpon>Init\CreateDatabase.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Init\CreateTableDist.usql.cs">
+      <DependentUpon>Init\CreateTableDist.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Init\LoadDataIntoStreetCrimesDistByCrimeType.usql.cs">
+      <DependentUpon>Init\LoadDataIntoStreetCrimesDistByCrimeType.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Init\PartitionInfo.usql.cs">
+      <DependentUpon>Init\PartitionInfo.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Utils\SplitData_CrimesDetails.usql.cs">
+      <DependentUpon>Utils\SplitData_CrimesDetails.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Utils\SplitData_CrimesLocations.usql.cs">
+      <DependentUpon>Utils\SplitData_CrimesLocations.usql</DependentUpon>
+    </ScriptCode>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Init" />
+    <Folder Include="Demos" />
+    <Folder Include="Utils" />
+  </ItemGroup>
+  <!-- check for SDK Build target in current path then in USQLSDKPath-->
+  <Import Project="UsqlSDKBuild.targets" Condition="Exists('UsqlSDKBuild.targets')" />
+  <Import Project="$(USQLSDKPath)\UsqlSDKBuild.targets" Condition="!Exists('UsqlSDKBuild.targets') And '$(USQLSDKPath)' != '' And Exists('$(USQLSDKPath)\UsqlSDKBuild.targets')" />
+</Project>
