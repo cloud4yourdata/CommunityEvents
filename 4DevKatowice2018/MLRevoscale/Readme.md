@@ -50,7 +50,7 @@ EXECUTE   sp_execute_external_script                     
 @language = N'Python'                     
 ,@script = N'
 import pandas as pd
-localWinePath = "d:\\Repos\\Cloud4YourData\\Demos\\4DevKatowice2018\\MLRevoscale\\Data\\wines.csv"
+localWinePath = "d:\\Repos\\Cloud4YourData\\CommunityEvents\\4DevKatowice2018\\MLRevoscale\\Data\\wines.csv"
 OutputDataSet = pd.read_csv(localWinePath, sep=";")
 '
 
@@ -144,7 +144,7 @@ Start Jupyter (directory)
 
 ```bash
 d:\
-cd d:\Repos\Cloud4YourData\Demos\4DevKatowice2018\MLRevoscale\Jupyter\
+cd d:\Repos\Cloud4YourData\CommunityEvents\4DevKatowice2018\MLRevoscale\Jupyter\
 ```
 
 ```bash
@@ -232,7 +232,7 @@ WITH RESULT SETS
 ### Prepare and save R Models (RevoscaleR Project->Script.R)
 
 ```R
-workDir <- "d:/Repos/Cloud4YourData/Demos/4DevKatowice2018/MLRevoscale/Data/Revoscale/"
+workDir <- "d:/Repos/Cloud4YourData/CommunityEvents/4DevKatowice2018/MLRevoscale/Data/Revoscale/"
 outPath <- paste0(workDir,"wines.xdf")
 sqlConnString <- "Driver=SQL Server; server=.; 
                      database=RevoScaleDb; Trusted_Connection = True;"
