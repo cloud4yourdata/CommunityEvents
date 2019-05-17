@@ -31,6 +31,7 @@
     <Script Include="Init\CreateTableDist.usql" />
     <Script Include="Init\LoadDataIntoStreetCrimesDistByCrimeType.usql" />
     <Script Include="Init\PartitionInfo.usql" />
+    <Script Include="Utils\PartitionInfoExt.usql" />
     <Script Include="Utils\SplitData_CrimesDetails.usql" />
     <Script Include="Utils\SplitData_CrimesLocations.usql" />
     <ScriptCode Include="Demos\Demo-001.usql.cs">
@@ -59,6 +60,9 @@
     </ScriptCode>
     <ScriptCode Include="Init\PartitionInfo.usql.cs">
       <DependentUpon>Init\PartitionInfo.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Utils\PartitionInfoExt.usql.cs">
+      <DependentUpon>Utils\PartitionInfoExt.usql</DependentUpon>
     </ScriptCode>
     <ScriptCode Include="Utils\SplitData_CrimesDetails.usql.cs">
       <DependentUpon>Utils\SplitData_CrimesDetails.usql</DependentUpon>
