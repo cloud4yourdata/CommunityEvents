@@ -18,7 +18,7 @@ EXECUTE   sp_execute_external_script                     
 @language = N'Python'                     
 ,@script = N'
 import pandas as pd
-localWinePath = "d:\\Repos\\Cloud4YourData\\Demos\\4DevKatowice2018\\MLRevoscale\\Data\\wines.csv"
+localWinePath = "d:\\Repos\\Cloud4YourData\\CommunityEvents\\4DevKatowice2018\\MLRevoscale\\Data\\wines.csv"
 OutputDataSet = pd.read_csv(localWinePath, sep=";")
 '
 
@@ -83,3 +83,5 @@ FROM [dbo].[Wines] WHERE [Id] NOT
 IN (SELECT [WineId] FROM [dbo].[WineTrain])
 
 SELECT * FROM  [dbo].[WineTrain]
+SELECT * FROM  [dbo].[WineTest]
+select * from dbo.Models

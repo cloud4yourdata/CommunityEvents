@@ -1,4 +1,4 @@
-workDir <- "d:/Repos/Cloud4YourData/Demos/4DevKatowice2018/MLRevoscale/Data/Revoscale/"
+workDir <- "d:/Repos/Cloud4YourData/CommunityEvents/4DevKatowice2018/MLRevoscale/Data/Revoscale/"
 outPath <- paste0(workDir,"wines.xdf")
 sqlConnString <- "Driver=SQL Server; server=.; database=RevoScaleDb; Trusted_Connection = True;"
 

@@ -10,3 +10,7 @@ EXEC sp_rxPredict
                CASE WHEN Color =''red'' THEN 1 ELSE 0 END ColNum,
                Quality
         FROM dbo.WineTest'
+
+
+
+SELECT * FROM Models

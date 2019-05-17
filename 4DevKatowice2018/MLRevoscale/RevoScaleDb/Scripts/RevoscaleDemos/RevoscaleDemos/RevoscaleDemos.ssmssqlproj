@@ -1,9 +1,82 @@
-<?xml version="1.0" encoding="utf-8"?>
-<SqlWorkbenchSqlProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="SqlWorkbenchSqlProject">
+<?xml version="1.0"?>
+<SqlWorkbenchSqlProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="RevoscaleDemos">
   <Items>
-    <LogicalFolder Name="Connections" Type="2" />
-    <LogicalFolder Name="Queries" Type="0" />
-    <LogicalFolder Name="Miscellaneous" Type="3" />
-
+    <LogicalFolder Name="Connections" Type="2" Sorted="true">
+      <Items>
+        <ConnectionNode Name="ZION-LAP:ZION-LAP\tkrawczyk">
+          <Created>2019-04-02T16:23:25.8751644+02:00</Created>
+          <Type>SQL</Type>
+          <Server>ZION-LAP</Server>
+          <UserName />
+          <Authentication>Windows Authentication</Authentication>
+          <InitialDB />
+          <LoginTimeout>30</LoginTimeout>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
+        </ConnectionNode>
+      </Items>
+    </LogicalFolder>
+    <LogicalFolder Name="Queries" Type="0" Sorted="true">
+      <Items>
+        <FileNode Name="000-EnableExternalScripts.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:ZION-LAP:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>ZION-LAP</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>000-EnableExternalScripts.sql</FullPath>
+        </FileNode>
+        <FileNode Name="001-Python.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:ZION-LAP:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>ZION-LAP</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>001-Python.sql</FullPath>
+        </FileNode>
+        <FileNode Name="002-LoadData.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:ZION-LAP:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>ZION-LAP</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>002-LoadData.sql</FullPath>
+        </FileNode>
+        <FileNode Name="003-PredPython.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:ZION-LAP:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>ZION-LAP</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>003-PredPython.sql</FullPath>
+        </FileNode>
+        <FileNode Name="004-RevoscaleR.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>004-RevoscaleR.sql</FullPath>
+        </FileNode>
+        <FileNode Name="005-LoadModel.sql">
+          <AssociatedConnectionMoniker />
+          <AssociatedConnSrvName />
+          <AssociatedConnUserName />
+          <FullPath>005-LoadModel.sql</FullPath>
+        </FileNode>
+        <FileNode Name="006-PredRevoscaleR.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:ZION-LAP:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>ZION-LAP</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>006-PredRevoscaleR.sql</FullPath>
+        </FileNode>
+        <FileNode Name="007-PredRevoscalePy.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:ZION-LAP:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>ZION-LAP</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>007-PredRevoscalePy.sql</FullPath>
+        </FileNode>
+        <FileNode Name="008-PredRealTimeScoring.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:ZION-LAP:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>ZION-LAP</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>008-PredRealTimeScoring.sql</FullPath>
+        </FileNode>
+      </Items>
+    </LogicalFolder>
+    <LogicalFolder Name="Miscellaneous" Type="3" Sorted="true">
+      <Items />
+    </LogicalFolder>
   </Items>
 </SqlWorkbenchSqlProject>
