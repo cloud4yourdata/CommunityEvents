@@ -1,0 +1,29 @@
+﻿{
+  "Sample": "{\"SerialNumber\":\"SerialNr0\",\"EventType\":0,\"EventValue1\":8,\"EventValue2\":0,\"EventValue3\":0,\"EventTime\":\"2019-01-12T09:34:40.9324459Z\"}",
+  "EventHubProperties": {
+    "ConsumerGroupName": "",
+    "EventHubName": "sweets-machines",
+    "ServiceBusNamespace": "sweets-ns",
+    "SharedAccessPolicyKey": null,
+    "SharedAccessPolicyName": "sweets-machines"
+  },
+  "BlobStorageProperties": null,
+  "IoTHubProperties": null,
+  "BlobReferenceProperties": null,
+  "SqlReferenceInputInfo": null,
+  "DataSourceCredentialDomain": "61a1167f-30cc-48b1-b83b-5a662e36a451.StreamAnalyticsCredential",
+  "Name": "SweetsMachine",
+  "Type": "Data Stream",
+  "DataSourceType": "Event Hub",
+  "Serialization": {
+    "Encoding": "UTF8",
+    "Type": "Json",
+    "FieldDelimiter": null,
+    "Format": null,
+    "SerializationDllPath": null,
+    "SerializationClassName": null,
+    "SerializationDllPathInLocal": null
+  },
+  "CompresssionType": "None",
+  "ScriptType": "Input"
+}

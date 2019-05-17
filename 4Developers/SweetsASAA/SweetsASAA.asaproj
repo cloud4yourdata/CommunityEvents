@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>1672ae29-ea90-4167-96ba-00f36c088db1</ProjectGuid>
+    <OutputType>File</OutputType>
+    <AssemblyName>SweetsASAA</AssemblyName>
+    <ASATargetsFilePath>$(AppData)\Microsoft\DataLake\MsBuild\1.0\StreamAnalytics.targets</ASATargetsFilePath>
+    <Name>SweetsASAA</Name>
+    <RootNamespace>SweetsASAA</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Configure Include="JobConfig1.json">
+      <SubType>JobConfig</SubType>
+    </Configure>
+    <Configure Include="SweetsMachine.json">
+      <SubType>Input</SubType>
+    </Configure>
+  </ItemGroup>
+  <ItemGroup>
+    <Script Include="Analyse.asaql" />
+  </ItemGroup>
+  <Import Project="$(ASATargetsFilePath)" />
+</Project>

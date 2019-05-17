@@ -1,0 +1,6 @@
+﻿SELECT se.SerialNumber,se.EventValue1, COUNT(*) AS Total 
+FROM SweetsMachine AS se 
+TIMESTAMP BY se.EventTime 
+WHERE se.EventType = 1 --Information about the sale
+GROUP BY TUMBLINGWINDOW(second,30), se.SerialNumber, se.EventValue1 
+
