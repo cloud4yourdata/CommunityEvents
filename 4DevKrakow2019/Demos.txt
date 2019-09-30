@@ -1,0 +1,9 @@
+Demo1
+Create Azure Data Lake Gen2 -Azure Portal 
+Azure Databricks 4 demos
+Snowflake -script (portal)
+Snowflake ODBC
+Azure DataFactory Mapping Flow (enable Data Debug Flow)
+Azure Kusto (Access +RDP)
+
+
