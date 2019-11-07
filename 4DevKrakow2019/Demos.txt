@@ -1,4 +1,5 @@
 Demo1
+WŁĄCZYĆ ADF Runtime
 Create Azure Data Lake Gen2 -Azure Portal 
 Azure Databricks 4 demos
 Snowflake -script (portal)
