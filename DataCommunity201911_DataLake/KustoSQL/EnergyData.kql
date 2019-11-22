@@ -1,0 +1,85 @@
+//EnergyData
+
+.drop external table EnergyDataExternal;
+
+.create external table EnergyDataExternal
+(
+  TimeStamp:datetime,
+  ValueMW:real,
+  PowerStation:string
+)
+kind=blob
+dataformat=csv
+(
+  h'https://bdpbstorage.blob.core.windows.net/data/EnergyData/EnergyData.csv;zKi5GnSru0d7DsJE6bMc9PxoyPBBx0V4uG9OFiT0EA4WCOqFTiuhb937QgVoeDb69hZuHaIKmL86/o4b0vsvEw=='
+)
+with
+(
+  docstring = 'Docs',
+  folder='ExternalTables',
+  ignoreFirstRecord=true
+)
+
+external_table("EnergyDataExternal")
+|take 10;
+
+
+
+.drop table EnergyData;
+
+.create table EnergyData
+(
+  TimeStamp:datetime,
+  ValueMW:real,
+  PowerStation:string
+);
+
+//Load data from blob
+.ingest into table EnergyData
+(
+  //Put data file into storage and set new file location
+  h'https://bdpbstorage.blob.core.windows.net/data/EnergyData/EnergyData.csv;{Key}'
+)
+with 
+(format='csv',
+ignoreFirstRecord=true
+)
+//Show data
+EnergyData
+|count;
+
+EnergyData
+| take 10;
+
+//anomaly detection
+EnergyData
+| where PowerStation =='DAYTON'
+| make-series AvgEnergy = avg(ValueMW) on TimeStamp from datetime(2017-01-01) to datetime(2018-08-02)+15d step 1d by PowerStation
+| extend NoGapsEnergy=series_fill_linear(AvgEnergy) 
+| project TimeStamp,NoGapsEnergy
+|extend anomalies=series_decompose_anomalies(NoGapsEnergy,0.7)
+|render anomalychart with(anomalycolumns = anomalies);
+
+//forecast
+EnergyData
+| where PowerStation =='DAYTON'
+| make-series AvgEnergy = avg(ValueMW) on TimeStamp from datetime(2018-07-01) to datetime(2018-08-02)+15d step 1d by PowerStation
+| extend NoGapsEnergy=series_fill_linear(AvgEnergy) 
+| project TimeStamp,NoGapsEnergy
+|extend forecast=series_decompose_forecast(NoGapsEnergy,15,24)
+|render timechart 
+
+
+
+.create function with(folder="Functions")
+AllEnergyData()
+{
+ EnergyData
+ | where TimeStamp>now()-time(90d)
+ |union kind=outer
+ (
+  external_table("EnergyDataExternal")
+  |where TimeStamp <= now()-time(90d)
+ )
+}
+

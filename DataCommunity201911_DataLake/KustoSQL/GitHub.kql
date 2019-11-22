@@ -1,0 +1,44 @@
+GithubEvent
+| where Repo has "Azure"
+|count ;
+
+GithubEvent
+| summarize dcount(tostring(Repo.name))
+
+GithubEvent
+| where Type =='WatchEvent'
+| summarize c = count() by tostring(Repo.name)
+|top 10 by c desc 
+
+let repos = GithubEvent
+|where Type =='WatchEvent' 
+| summarize  c=count() by name=tostring(Repo.name)
+| top 3 by c desc
+|project  name;
+
+GithubEvent
+| where Repo.name in (repos)
+| extend repo =tostring(Repo.name)
+| summarize count() by bin (CreatedAt,1d), repo
+| render timechart
+
+ GithubEvent 
+ | where Type == 'WatchEvent' 
+ | summarize WatchCounts = count() by name=tostring(Repo.name)
+ | top 10 by WatchCounts 
+ | join hint.strategy = broadcast
+ ( GithubEvent 
+  | extend repo = tostring(Repo.name) 
+  | summarize TotalEvents=count() by repo )
+   on $left.name == $right.repo 
+   | project repo, TotalEvents, WatchCounts 
+   | order by TotalEvents
+
+   .show databases details
+   |project size=TotalSize/1014/1024/1024
+
+ .show function KustoRepos
+
+ .show queries 
+
+ .show cluster details

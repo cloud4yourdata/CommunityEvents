@@ -1,0 +1,2 @@
+https://dataexplorer.azure.com/clusters/demo12.westus/databases/GitHub
+https://dataexplorer.azure.com/clusters/help/databases/Samples
