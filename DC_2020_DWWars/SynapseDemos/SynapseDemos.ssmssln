@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# SQL Server Management Studio Solution File, Format Version 18.00
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "SynapseDemos", "SynapseDemos\SynapseDemos.ssmssqlproj", "{BA28C0A2-4A26-420C-A6F8-FA2110569BC9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Default|Default = Default|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA28C0A2-4A26-420C-A6F8-FA2110569BC9}.Default|Default.ActiveCfg = Default
+		{DDB4C985-DBF4-4A83-BC64-A20BBCDA1915}.Default|Default.ActiveCfg = Default
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {01E4D8C0-9839-4592-98F8-743DAC45A978}
+	EndGlobalSection
+EndGlobal
