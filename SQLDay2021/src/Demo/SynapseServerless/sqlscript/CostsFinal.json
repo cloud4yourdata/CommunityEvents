@@ -1,0 +1,19 @@
+{
+	"name": "CostsFinal",
+	"properties": {
+		"folder": {
+			"name": "SQLDay2020DemoFinal"
+		},
+		"content": {
+			"query": "SELECT * FROM sys.dm_external_data_processed WHERE Type='daily'",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "master",
+				"type": "SqlOnDemand"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

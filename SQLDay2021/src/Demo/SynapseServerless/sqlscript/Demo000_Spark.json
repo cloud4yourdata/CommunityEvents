@@ -1,0 +1,20 @@
+{
+	"name": "Demo000_Spark",
+	"properties": {
+		"folder": {
+			"name": "SQLDay2021"
+		},
+		"content": {
+			"query": "SELECT * FROM sqlday2021.dbo.DataTable",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "master"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

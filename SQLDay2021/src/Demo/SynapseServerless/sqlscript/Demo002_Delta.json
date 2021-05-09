@@ -1,0 +1,20 @@
+{
+	"name": "Demo002_Delta",
+	"properties": {
+		"folder": {
+			"name": "SQLDay2021"
+		},
+		"content": {
+			"query": "USE SQLDay2021Demo;\n\nWITH dataFileNames AS\n(\n  SELECT \nRIGHT(f.C1, CHARINDEX('/', REVERSE(f.C1)) -1)\nAS fileName FROM \n  OPENROWSET(\n        BULK 'https://datalake2demos.dfs.core.windows.net/datalake/analytics_zone/DWHS/SQLDay2021Demo/streetcrimesdeltaoptimize/_symlink_format_manifest/manifest',\n        FORMAT='CSV',\n        PARSER_VERSION = '2.0',\n        firstrow = 0\n  ) AS f\n)\nSELECT\n     TOP 10000 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake2demos.dfs.core.windows.net/datalake/analytics_zone/DWHS/SQLDay2021Demo/streetcrimesdeltaoptimize/',\n        FORMAT='PARQUET'\n    ) AS [r]\nWHERE r.filename() IN \n    (SELECT f.fileName FROM dataFileNames AS f )\n\n\n----STATIC FILES\nDECLARE @files NVARCHAR(MAX);\n SELECT STRING_AGG(''''+RIGHT(f.C1, CHARINDEX('/', REVERSE(f.C1)) -1)+'''',',')\n FROM \n  OPENROWSET(\n        BULK 'https://datalake2demos.dfs.core.windows.net/datalake/analytics_zone/DWHS/SQLDay2021Demo/streetcrimesdeltaoptimize/_symlink_format_manifest/manifest',\n        FORMAT='CSV',\n        PARSER_VERSION = '2.0',\n        firstrow = 0\n  ) AS f\n\n  SELECT\n     TOP 10000 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake2demos.dfs.core.windows.net/datalake/analytics_zone/DWHS/SQLDay2021Demo/streetcrimesdeltaoptimize/',\n        FORMAT='PARQUET'\n    ) AS [r]\nWHERE r.filename() IN \n    ('part-00000-7f58ff2c-ad80-4646-8ec4-7d64d3af9d13-c000.snappy.parquet','part-00000-a863eee0-0240-4783-80aa-3a773b8a5a4c-c000.snappy.parquet' )\n\n--PARITIONED DATA\n\nWITH dataFileNames AS\n(\n  SELECT \nRIGHT(f.C1, CHARINDEX('/', REVERSE(f.C1)) -1)\nAS fileName FROM \n  OPENROWSET(\n        BULK 'https://datalake2demos.dfs.core.windows.net/datalake/analytics_zone/DWHS/SQLDay2021Demo/streetcrimesdeltapartitioned/_symlink_format_manifest/*/*/manifest',\n        FORMAT='CSV',\n        PARSER_VERSION = '2.0',\n        firstrow = 0\n  ) AS f\n), ParData AS\n(\nSELECT\n     CAST(r.filepath(1) AS INT) AS YearReported,\n     CAST(r.filepath(2) AS INT) AS MonthReported,\n      *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake2demos.dfs.core.windows.net/datalake/analytics_zone/DWHS/SQLDay2021Demo/streetcrimesdeltapartitioned/YearReported=*/MonthReported=*/*.snappy.parquet',\n        FORMAT='PARQUET'\n    ) AS [r]\nWHERE r.filename() IN \n    (SELECT f.fileName FROM dataFileNames AS f )\n)\nSELECT * FROM ParData WHERE YearReported =2018 AND MonthReported = 1 AND DistrictCode='E01003876'\n\n---\nSELECT command,data_processed_mb FROM sys.dm_exec_requests_history ORDER BY start_time DESC\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "SQLDay2021Demo"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,6 @@
+{
+	"name": "MyLap",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}

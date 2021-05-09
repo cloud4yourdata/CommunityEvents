@@ -1,0 +1,20 @@
+{
+	"name": "Demo004_TypeMappings",
+	"properties": {
+		"folder": {
+			"name": "SQLDay2021"
+		},
+		"content": {
+			"query": "EXEC sp_describe_first_result_set N'SELECT TOP 1 * FROM SQLDay2020DemoFinal.dbo.vwDimUser'",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "master"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

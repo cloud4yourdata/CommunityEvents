@@ -1,0 +1,20 @@
+{
+	"name": "Demo001_Manifest",
+	"properties": {
+		"folder": {
+			"name": "SQLDay2021"
+		},
+		"content": {
+			"query": "--DELTA RAW\nSELECT \nRIGHT(f.C1, CHARINDEX('/', REVERSE(f.C1)) -1)\nAS fileName FROM \n  OPENROWSET(\n        BULK 'https://datalake2demos.dfs.core.windows.net/datalake/analytics_zone/DWHS/SQLDay2021Demo/streetcrimesdeltaraw/_symlink_format_manifest/manifest',\n        FORMAT='CSV',\n        PARSER_VERSION = '2.0',\n        firstrow = 0\n  ) AS f\n--AUTOCOMPACT\nSELECT \nRIGHT(f.C1, CHARINDEX('/', REVERSE(f.C1)) -1)\nAS fileName FROM \n  OPENROWSET(\n        BULK 'https://datalake2demos.dfs.core.windows.net/datalake/analytics_zone/DWHS/SQLDay2021Demo/streetcrimesdeltaautocompact/_symlink_format_manifest/manifest',\n        FORMAT='CSV',\n        PARSER_VERSION = '2.0',\n        firstrow = 0\n  ) AS f\n--OPTIMIZED\nSELECT \nRIGHT(f.C1, CHARINDEX('/', REVERSE(f.C1)) -1)\nAS fileName FROM \n  OPENROWSET(\n        BULK 'https://datalake2demos.dfs.core.windows.net/datalake/analytics_zone/DWHS/SQLDay2021Demo/streetcrimesdeltaoptimize/_symlink_format_manifest/manifest',\n        FORMAT='CSV',\n        PARSER_VERSION = '2.0',\n        firstrow = 0\n  ) AS f\n\n--PARTITIONED\n  SELECT \nRIGHT(f.C1, CHARINDEX('/', REVERSE(f.C1)) -1)\nAS fileName FROM \n  OPENROWSET(\n        BULK 'https://datalake2demos.dfs.core.windows.net/datalake/analytics_zone/DWHS/SQLDay2021Demo/streetcrimesdeltapartitioned/_symlink_format_manifest/*/*/manifest',\n        FORMAT='CSV',\n        PARSER_VERSION = '2.0',\n        firstrow = 0\n  ) AS f",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "master"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

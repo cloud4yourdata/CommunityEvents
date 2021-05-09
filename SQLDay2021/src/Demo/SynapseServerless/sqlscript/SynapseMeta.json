@@ -1,0 +1,20 @@
+{
+	"name": "SynapseMeta",
+	"properties": {
+		"folder": {
+			"name": "Labs"
+		},
+		"content": {
+			"query": "DECLARE @files NVARCHAR(MAX);\n SELECT\n    @files = STRING_AGG(''''+RIGHT(f.C1, CHARINDEX('/', REVERSE(f.C1)) -1)+'''',',') --AS fileName\n  FROM\n    OPENROWSET(\n      BULK 'abfss://datalake@datalake2demos.dfs.core.windows.net/analytics_zone/DWHS/DeltaDWH/dimuser/_synapseMetadata/*.csv',\n      FORMAT = 'CSV',\n      PARSER_VERSION = '2.0',\n      firstrow = 0\n    ) AS f;\nSELECT @files;\n\n DECLARE @ddl NVARCHAR(MAX) ='CREATE OR ALTER VIEW dbo.vw_dimuser AS \n SELECT\n  *\nFROM\n  OPENROWSET(\n    BULK ''abfss://datalake@datalake2demos.dfs.core.windows.net/analytics_zone/DWHS/DeltaDWH/dimuser/*.snappy.parquet'',\n    FORMAT = ''PARQUET''\n  ) AS r WHERE r.filename() IN ({data_files})';\n\nSET @ddl = REPLACE(@ddl,'{data_files}',@files);\nprint(@ddl)\nEXEC sp_executesql @ddl;\n\nSELECT * FROM dbo.vw_dimuser;\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "Raw"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

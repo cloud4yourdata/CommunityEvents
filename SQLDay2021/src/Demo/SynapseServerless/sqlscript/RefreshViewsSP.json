@@ -1,0 +1,20 @@
+{
+	"name": "RefreshViewsSP",
+	"properties": {
+		"folder": {
+			"name": "SQLDay2021/Init"
+		},
+		"content": {
+			"query": "CREATE SCHEMA utils;;\n\nCREATE OR ALTER PROCEDURE utils.usp_RefreshView\n @viewDef NVARCHAR(MAX),\n @dataSource NVARCHAR(255),\n @dataManifestPath NVARCHAR(MAX)\n AS\n BEGIN\n   DECLARE @manifestQuery NVARCHAR(MAX);\n   DECLARE @files NVARCHAR(MAX);\n  SET @manifestQuery =N'\n   SELECT\n    @files = STRING_AGG(''''''''+RIGHT(f.C1, CHARINDEX(''/'', REVERSE(f.C1)) -1)+'''''''','','')\n  FROM\n    OPENROWSET(\n      BULK ''%%data_manifest_path%%'',\n      FORMAT = ''CSV'',\n\t  DATA_SOURCE = ''%%data_source%%'',\n      PARSER_VERSION = ''2.0'',\n      FIRSTROW = 0\n    ) AS f';\n SET @manifestQuery = REPLACE(@manifestQuery,'%%data_manifest_path%%',@dataManifestPath);\n SET @manifestQuery = REPLACE(@manifestQuery,'%%data_source%%',@dataSource);\n\n EXEC sp_executesql @manifestQuery,   \n    N'@files NVARCHAR(MAX) OUTPUT',\n    @files OUTPUT;\n \n  SET @viewDef = REPLACE(@viewDef,'%%manifest_file_list%%',@files);\n\n  PRINT @viewDef;\n  EXEC sp_executesql @viewDef\n\n END\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "SQLDay2021Demo"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

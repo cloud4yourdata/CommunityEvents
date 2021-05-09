@@ -1,0 +1,20 @@
+{
+	"name": "CreateViewsSecurity",
+	"properties": {
+		"folder": {
+			"name": "SQLDay2021/Init"
+		},
+		"content": {
+			"query": "CREATE OR ALTER VIEW dbo.vwUserManagedIdentity\nAS\nWITH dataFileNames AS\n(\nSELECT \nRIGHT(f.C1, CHARINDEX('/', REVERSE(f.C1)) -1)\nAS fileName FROM \n  OPENROWSET(\n        BULK 'analytics_zone/DWHS/DWH2021/user/_symlink_format_manifest/*/manifest',\n        FORMAT='CSV',\n        PARSER_VERSION = '2.0',\n        FIRSTROW = 0,\n        DATA_SOURCE = 'DataLake'\n  ) AS f\n)\nSELECT CAST(r.filepath(1) AS BIT)  AS dwh_IsCurrent, * FROM \nOPENROWSET( \n     BULK 'analytics_zone/DWHS/DWH2021/user/dwh_IsCurrent=*/*.snappy.parquet',\n        FORMAT='PARQUET',\n        FIRSTROW = 0,\n        DATA_SOURCE = 'DataLake'\n) AS r\nWHERE r.filename() IN (SELECT fileName FROM dataFileNames );\n------------------------------------------------------------------\nGO\nCREATE OR ALTER VIEW dbo.vwUserUserIdentity\nAS\nWITH dataFileNames AS\n(\nSELECT \nRIGHT(f.C1, CHARINDEX('/', REVERSE(f.C1)) -1)\nAS fileName FROM \n  OPENROWSET(\n        BULK 'abfss://datalake@datalake2demos.dfs.core.windows.net/analytics_zone/DWHS/DWH2021/user/_symlink_format_manifest/*/manifest',\n        FORMAT='CSV',\n        PARSER_VERSION = '2.0',\n        FIRSTROW = 0\n  ) AS f\n)\nSELECT CAST(r.filepath(1) AS BIT)  AS dwh_IsCurrent, * FROM \nOPENROWSET( \n     BULK 'abfss://datalake@datalake2demos.dfs.core.windows.net/analytics_zone/DWHS/DWH2021/user/dwh_IsCurrent=*/*.snappy.parquet',\n        FORMAT='PARQUET',\n        FIRSTROW = 0\n) AS r\nWHERE r.filename() IN (SELECT fileName FROM dataFileNames );\n\n\n-----\nCREATE LOGIN sqlday2021 WITH PASSWORD ='Monday2021.';\nCREATE USER sqlday2021 FROM LOGIN sqlday2021;\n\nALTER ROLE [db_owner] ADD MEMBER [sqlday2021];\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "SQLDay2021Demo"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

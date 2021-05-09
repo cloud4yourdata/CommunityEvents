@@ -1,0 +1,19 @@
+{
+	"name": "Costs",
+	"properties": {
+		"folder": {
+			"name": "SQLDay2020Demo"
+		},
+		"content": {
+			"query": "SELECT * FROM sys.dm_external_data_processed \nWHERE Type='daily'\n\nSELECT Type, CAST(data_processed_mb/(1024.0*1024.0) * 5 AS VARCHAR(20)) +'$' AS Costs FROM sys.dm_external_data_processed \nWHERE Type='daily'\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "master"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}
