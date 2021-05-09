@@ -6,7 +6,7 @@
 
 https://www.element61.be/en/resource/when-use-azure-synapse-analytics-andor-azure-databricks
 
-![Synapse Spark](C:\Users\tkrawczyk\OneDrive - Future Processing S.A\SQLDay\SQLDay2021\imgs\SynapseSpark.png)
+![Synapse Spark](./imgs/SynapseSpark.png)
 
 **Pros**
 
