@@ -10,10 +10,11 @@
 
 [Data lakehouse -data flow](MyDataLakehouse.md)
 
-[Azure Databricks Clusters](DatabrickClusters.md)
+[Azure Databricks Clusters](DataBrickClusters.md)
 
 
 ### Demos
-[Demos](.\src\Demo\)
-[Framework](.\src\ProcFramework\)
+[Demos](.\src\Demo)
+
+[Framework](.\src\ProcFramework)
 
