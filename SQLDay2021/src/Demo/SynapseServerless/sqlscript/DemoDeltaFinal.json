@@ -1,0 +1,19 @@
+{
+	"name": "DemoDeltaFinal",
+	"properties": {
+		"folder": {
+			"name": "SQLDay2020DemoFinal"
+		},
+		"content": {
+			"query": "CREATE DATABASE SqlDay2020DemoFinal;\nUSE SqlDay2020DemoFinal;\n\nSELECT\n    *\nFROM\n    OPENROWSET(\n        BULK 'abfss://datalake@datalake2demos.dfs.core.windows.net/analytics_zone/DWHS/DeltaDWHFinal/dimuser/',\n        FORMAT='PARQUET'\n    ) AS [r]\nWHERE UserId =0 \n\n---GO TO Spark Demo3\n\nWITH dataFileNames AS\n(\n    SELECT REPLACE(f.C1,'abfss://datalake@datalake2demos.dfs.core.windows.net/analytics_zone/DWHS/DeltaDWHFinal/dimuser/','') AS fileName FROM \n  OPENROWSET(\n        BULK 'abfss://datalake@datalake2demos.dfs.core.windows.net/analytics_zone/DWHS/DeltaDWHFinal/dimuser/_symlink_format_manifest/manifest',\n        FORMAT='CSV',\n        PARSER_VERSION = '2.0',\n        firstrow = 0\n  ) AS f\n)\nSELECT\n    UserKey, UserId, UserRole,row_iscurrent AS IsCurrent,  row_startdate AS StartDate,row_enddate AS EndDate\nFROM\n    OPENROWSET(\n        BULK 'abfss://datalake@datalake2demos.dfs.core.windows.net/analytics_zone/DWHS/DeltaDWHFinal/dimuser/',\n        FORMAT='PARQUET'\n    ) AS [r]\nWHERE r.filename() IN \n    (SELECT f.fileName FROM dataFileNames AS f )\nAND UserId = 0 \n\n----------------\n\n\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SqlDay2020DemoFinal",
+				"type": "SqlOnDemand"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"name": "DSProcFrameworkGeneric",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlProcFramework",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}

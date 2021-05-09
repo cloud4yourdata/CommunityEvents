@@ -1,0 +1,20 @@
+{
+	"name": "DemoNYT",
+	"properties": {
+		"folder": {
+			"name": "SQLDay2020Demo"
+		},
+		"content": {
+			"query": "SELECT\n    YEAR(tpepPickupDateTime) AS current_year,\n    COUNT(*) AS rides_per_year\nFROM\n    OPENROWSET(\n        BULK 'https://azureopendatastorage.blob.core.windows.net/nyctlc/yellow/puYear=*/puMonth=*/*.parquet',\n        FORMAT='PARQUET'\n    ) AS [nyc]\nWHERE nyc.filepath(1) >= '2014' AND nyc.filepath(1) <= '2019'\nGROUP BY YEAR(tpepPickupDateTime)\nORDER BY 1 ASC;\n\n\n663 138 570\n\nSELECT @@Version",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "master"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

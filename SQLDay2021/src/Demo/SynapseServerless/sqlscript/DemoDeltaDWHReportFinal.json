@@ -1,0 +1,19 @@
+{
+	"name": "DemoDeltaDWHReportFinal",
+	"properties": {
+		"folder": {
+			"name": "SQLDay2020DemoFinal"
+		},
+		"content": {
+			"query": "USE SqlDay2020DemoFinal;\n\n\nSELECT \nd.Year,u.UserName, COUNT(*) AS total\nFROM dbo.vwFactTask AS t\nJOIN dbo.vwDimDate AS d ON d.DateKey = t.DateKey\nJOIN dbo.vwDimUser AS u ON u.UserKey = t.UserKey\nGROUP BY d.Year,u.UserName\nORDER BY d.Year DESC, total DESC\n\n--SELECT * FROM dbo.vwFactTask AS t",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SqlDay2020DemoFinal",
+				"type": "SqlOnDemand"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

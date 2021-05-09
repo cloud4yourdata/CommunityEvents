@@ -1,0 +1,98 @@
+{
+	"name": "RefreshViews",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetViews",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT \nProcDatabaseName\n,TableId\n\t,ViewStatement\n\t,ManifestPath\n\t,ServeDataSource\nFROM [serve].[vwServeViews]\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DSProcFrameworkGeneric",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEachViews",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "GetViews",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetViews').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "RefreshViewServerless",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[utils].[usp_RefreshView]",
+								"storedProcedureParameters": {
+									"dataSource": {
+										"value": {
+											"value": "@item().ServeDataSource",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"dataManifestPath": {
+										"value": {
+											"value": "@item().ManifestPath",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"viewDef": {
+										"value": {
+											"value": "@item().ViewStatement",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "AzureSynapseServeless",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": []
+	}
+}

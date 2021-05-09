@@ -1,0 +1,20 @@
+{
+	"name": "Init",
+	"properties": {
+		"folder": {
+			"name": "SQLDay2021/Init"
+		},
+		"content": {
+			"query": "CREATE DATABASE [SQLDay2021Demo]\nCOLLATE Latin1_General_100_BIN2_UTF8;\n\nUSE [SQLDay2021Demo]\n\n\nSELECT name,collation_name FROM sys.databases\n\n\nCREATE MASTER KEY ENCRYPTION BY PASSWORD ='******';\nCREATE DATABASE SCOPED CREDENTIAL DataLakeManagedIdentityCredential\nWITH IDENTITY='Managed Identity';\n\nCREATE EXTERNAL DATA SOURCE [DataLake] \nWITH \n (LOCATION = N'abfss://datalake@datalake2demos.dfs.core.windows.net',\n  CREDENTIAL = [DataLakeManagedIdentityCredential])\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "SQLDay2021Demo"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

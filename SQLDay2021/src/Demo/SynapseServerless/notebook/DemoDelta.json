@@ -1,0 +1,160 @@
+{
+	"name": "DemoDelta",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "demo",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/ab86deda-c257-42d0-bd53-04612d5ba4eb/resourceGroups/sqlday2020demos/providers/Microsoft.Synapse/workspaces/synapasedemos/bigDataPools/demo",
+				"name": "demo",
+				"type": "Spark",
+				"endpoint": "https://synapasedemos.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/demo",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"from delta.tables import *\n",
+					"from pyspark.sql.functions import *"
+				],
+				"attachments": null,
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"deltaTable = DeltaTable.forPath(spark, \"abfss://datalake@datalake2demos.dfs.core.windows.net/analytics_zone/DWHS/DeltaDWH/dimuser/\")\n",
+					"deltaTable.toDF().orderBy(\"UserId\").show()"
+				],
+				"attachments": null,
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df = spark.read.format(\"delta\").option(\"versionAsOf\", 1).load(\"abfss://datalake@datalake2demos.dfs.core.windows.net/analytics_zone/DWHS/DeltaDWH/dimuser/\")\n",
+					"df.show()"
+				],
+				"attachments": null,
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"deltaTable.toDF().select(input_file_name()).distinct().show(truncate=False)"
+				],
+				"attachments": null,
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"df.select(input_file_name()).distinct().show(truncate=False)"
+				],
+				"attachments": null,
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"deltaTable.toDF().select(input_file_name()).distinct().coalesce(1).write.mode('overwrite').csv('abfss://datalake@datalake2demos.dfs.core.windows.net/analytics_zone/DWHS/DeltaDWH/dimuser/_synapseMetadata')"
+				],
+				"attachments": null,
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}

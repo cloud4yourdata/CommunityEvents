@@ -1,0 +1,17 @@
+{
+	"name": "AzureDatabricksProcessing",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-1502559121572559.19.azuredatabricks.net",
+			"authentication": "MSI",
+			"workspaceResourceId": "/subscriptions/ab86deda-c257-42d0-bd53-04612d5ba4eb/resourceGroups/sqlday2020demos/providers/Microsoft.Databricks/workspaces/databricksdemos",
+			"existingClusterId": "0331-134529-tonic7"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
