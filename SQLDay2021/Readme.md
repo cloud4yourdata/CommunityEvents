@@ -13,8 +13,3 @@
 [Azure Databricks Clusters](DataBrickClusters.md)
 
 
-### Demos
-[Demos](.\src\Demo)
-
-[Framework](.\src\ProcFramework)
-
