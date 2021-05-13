@@ -6,7 +6,7 @@ p.IsNullable
 FROM dbo.DataSet AS ds
 JOIN dbo.DataSetProperty AS p ON p.DataSetId=ds.Id;
 
-
+--SQL Server
 WITH pks
 AS (SELECT col.[name] AS ColumnName,
            tab.[name] AS TableName,
@@ -49,7 +49,8 @@ FROM INFORMATION_SCHEMA.TABLES AS t
 
 
 ---------------------------
-
+SELECT * FROM [serve].[ServeTemplate]
+------------------------------
 SELECT 
 ProcDatabaseName
 ,TableId
@@ -57,3 +58,5 @@ ProcDatabaseName
 	,ManifestPath
 	,ServeDataSource
 FROM [serve].[vwServeViews]
+
+

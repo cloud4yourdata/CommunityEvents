@@ -1,4 +1,8 @@
+--USE [procframework];
+
 SELECT * FROM [proc].ProcTemplate;
+
+
 SELECT t.[Name] AS TableName,
 c.ColumnName,
 c.DataType,

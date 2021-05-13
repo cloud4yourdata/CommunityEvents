@@ -9,3 +9,9 @@ Post-Deployment Script Template
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
+:r Scripts\AddDicts.sql
+:r Scripts\AddDictSource.sql
+:r Scripts\SampleLog.sql
+:r Scripts\ServeTemplates.sql
+:r Scripts\UserProcConfiguration.sql
+:r Scripts\UserSourceConfig.sql

@@ -1,9 +1,0 @@
-﻿CREATE TABLE [serve].[Config]
-(
-	[Id] INT NOT NULL IDENTITY(1,1),
-	[Key] VARCHAR(255) NOT NULL,
-	[Value] VARCHAR(1024) NOT NULL,
-	 CONSTRAINT [PK_ServeConfig] PRIMARY KEY CLUSTERED ([Id] ASC),
-)
-GO
-CREATE UNIQUE INDEX [IX_U_Config_Key] ON [serve].[Config]([Key]);
