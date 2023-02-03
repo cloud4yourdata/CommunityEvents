@@ -1,0 +1,37 @@
+USE [master]
+GO
+
+SELECT * FROM sys.databases WHERE [name]='DCSQLServer2022MeetupGliwice'
+
+IF (DB_ID('DCSQLServer2022MeetupGliwice') IS NOT NULL)
+BEGIN
+	ALTER DATABASE DCSQLServer2022MeetupGliwice SET OFFLINE WITH ROLLBACK IMMEDIATE;
+	DROP DATABASE DCSQLServer2022MeetupGliwice;
+END
+GO
+
+--CREATE DATABASE
+CREATE DATABASE DCSQLServer2022MeetupGliwice;
+
+
+EXEC sp_helpdb;
+
+
+---CREATE MASTER KEY IN DATABASE
+USE DCSQLServer2022MeetupGliwice;
+
+IF NOT EXISTS
+(
+	SELECT 1
+	FROM sys.symmetric_keys
+	WHERE
+		name LIKE '%DatabaseMasterKey%'
+)
+BEGIN
+	CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'P@$$w0rd1234!';
+END
+
+---CHECK MASTER KEY
+SELECT *
+FROM sys.symmetric_keys
+WHERE name LIKE '%DatabaseMasterKey%'
